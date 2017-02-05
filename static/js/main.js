@@ -23,4 +23,7 @@ $(function(){
     $('a.icon').on('click', function(){
         return confirm('Are you sure?');
     });
+    $('a.icon icon-remove-sign').on('click', function(){
+        return confirm('remove?! Are you sure?');
+    });
 });
