@@ -355,6 +355,11 @@ def blog_settings():
                            error_type=error_type)
 
 
+@app.route('/imgupload', methods=['GET', 'POST'])
+def img_upload():
+    return render_template('upload_img.html')
+
+
 @app.route('/install', methods=['GET', 'POST'])
 def install():
     if session.get('installed', None):
