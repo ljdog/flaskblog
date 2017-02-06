@@ -14,6 +14,7 @@ import pagination
 import settings
 from helper_functions import *
 from flask.ext.moment import Moment
+from flask import current_app
 
 app = Flask('FlaskBlog')
 moment = Moment(app)
@@ -357,8 +358,13 @@ def blog_settings():
 
 @app.route('/imgupload', methods=['GET', 'POST'])
 def img_upload():
-    return render_template('upload_img.html')
-
+    img_data = request.form.get('imgupload', None)
+    if not img_data:
+        current_app.logging.error("is ok")
+        return render_template('upload_img.html')
+    else:
+        current_app.logging.error("is ok")
+        return '<h1>ok!!</hl>'
 
 @app.route('/install', methods=['GET', 'POST'])
 def install():
