@@ -20,7 +20,7 @@ $(function(){
         var postForm = $('#post-form');
         postForm.find('#preview').val('');
     });
-    $('a.icon .icon-edit-sign').on('click', function(){
+    $('a.icon-edit-sign').on('click', function(){
         return confirm('Edit?! Are you sure?');
     });
     $('a.icon .icon-remove-sign').on('click', function(){
