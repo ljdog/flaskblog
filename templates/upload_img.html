@@ -7,6 +7,7 @@
  {% block page_content %}
      <h4>uploaded: {% if url %} {{url}}{% endif %}</h4>
      <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+     <img id="uploadPreview" src="">
      {{ wtf.quick_form(form, enctype="multipart/form-data") }}
 
  {% endblock page_content %}
@@ -29,21 +30,21 @@
 
 {%- block scripts -%}
     {{ super() }}
-{#    <script>#}
-{#        if (typeof FileReader === 'undefined') {#}
-{#            alert("抱歉，你的浏览器不支持 FileReader");#}
-{#        }#}
-{#        $("#imgupload").change(function (e) {#}
-{#            for (var i = 0; i < e.target.files.length; i++) {#}
-{#                var file = e.target.files.item(i);#}
-{#                var freader = new FileReader();#}
-{#                freader.readAsDataURL(file);#}
-{#                freader.onload = function (e) {#}
-{#                    var src = e.target.result;#}
-{#                    //console.log(e.target);#}
-{#                    $("#uploadPreview").attr("src", src);#}
-{#                }#}
-{#            }#}
-{#        });#}
-{#    </script>#}
+    <script>
+        if (typeof FileReader === 'undefined') {
+            alert("抱歉，你的浏览器不支持 FileReader");
+        }
+        $("#upload").change(function (e) {
+            for (var i = 0; i < e.target.files.length; i++) {
+                var file = e.target.files.item(i);
+                var freader = new FileReader();
+                freader.readAsDataURL(file);
+                freader.onload = function (e) {
+                    var src = e.target.result;
+                    //console.log(e.target);
+                    $("#uploadPreview").attr("src", src);
+                }
+            }
+        });
+    </script>
 {%- endblock -%}
