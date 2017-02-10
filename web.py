@@ -25,7 +25,7 @@ from flask_wtf import Form
 from wtforms import SubmitField
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 from flask_bootstrap import Bootstrap
-from forms import UploadForm
+# from forms import UploadForm
 
 app = Flask('FlaskBlog')
 moment = Moment(app)
@@ -52,7 +52,16 @@ app.config['UPLOADED_MYPIC_ALLOW'] = IMAGES
 
 # 把刚刚app设置的config注册到set_mypic
 configure_uploads(app, set_mypic)
-
+#####
+class UploadForm(Form):
+    """
+    一个简单的上传表单
+    """
+    # 文件field设置为‘必须的’，过滤规则设置为‘set_mypic’
+    upload = FileField('image', validators=[
+        FileRequired(), FileAllowed(set_mypic, 'you can upload images only!')])
+    submit = SubmitField('ok')
+#####
 
 @app.route('/', defaults={'page': 1})
 @app.route('/page-<int:page>')

@@ -9,11 +9,4 @@ from wtforms import SubmitField
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 from web import set_mypic
 
-class UploadForm(Form):
-    """
-    一个简单的上传表单
-    """
-    # 文件field设置为‘必须的’，过滤规则设置为‘set_mypic’
-    upload = FileField('image', validators=[
-        FileRequired(), FileAllowed(set_mypic, 'you can upload images only!')])
-    submit = SubmitField('ok')
+
