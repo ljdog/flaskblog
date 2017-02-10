@@ -1,11 +1,14 @@
+ {% import "bootstrap/wtf.html" as wtf %}
 {%- extends 'index.html' -%}
 {%- block body -%}
 
-    {% import "bootstrap/wtf.html" as wtf %}
+
 
  {% block page_content %}
      <h4>uploaded: {% if url %} {{url}}{% endif %}</h4>
+     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
      {{ wtf.quick_form(form, enctype="multipart/form-data") }}
+
  {% endblock page_content %}
 
 
