@@ -16,6 +16,17 @@ from helper_functions import *
 from flask.ext.moment import Moment
 from flask import current_app
 
+
+from flask.ext.uploads import UploadSet
+from flask_bootstrap import Bootstrap
+from flask import Flask, render_template
+from flask_uploads import UploadSet, IMAGES, configure_uploads
+from flask_wtf import Form
+from wtforms import SubmitField
+from flask_wtf.file import FileField, FileAllowed, FileRequired
+from flask_bootstrap import Bootstrap
+from forms import UploadForm
+
 app = Flask('FlaskBlog')
 moment = Moment(app)
 
@@ -25,6 +36,22 @@ md.register_extension(StrikeExtension)
 md.register_extension(QuoteExtension)
 md.register_extension(MultilineCodeExtension)
 app.config.from_object('config')
+
+# 新建一个set用于设置文件类型、过滤等
+set_mypic = UploadSet('mypic')  # mypic
+
+# 用于wtf.quick_form()模版渲染
+bootstrap = Bootstrap(app)
+
+# mypic 的存储位置,
+# UPLOADED_xxxxx_DEST, xxxxx部分就是定义的set的名称, mypi, 下同
+app.config['UPLOADED_MYPIC_DEST'] = './static/img'
+
+# mypic 允许存储的类型, IMAGES为预设的 tuple('jpg jpe jpeg png gif svg bmp'.split())
+app.config['UPLOADED_MYPIC_ALLOW'] = IMAGES
+
+# 把刚刚app设置的config注册到set_mypic
+configure_uploads(app, set_mypic)
 
 
 @app.route('/', defaults={'page': 1})
@@ -354,6 +381,19 @@ def blog_settings():
                            meta_title='Settings',
                            error=error,
                            error_type=error_type)
+
+################
+@app.route('/upload_img', methods=('GET', 'POST'))
+def upload_img():
+
+    form = UploadForm()
+    url = None
+    if form.validate_on_submit():
+        filename = form.upload.data.filename
+        url = set_mypic.save(form.upload.data, name=filename)
+    return render_template('upload_img.html', form=form, url=url)
+
+################
 
 
 @app.route('/imgupload', methods=['GET', 'POST'])

@@ -1,5 +1,14 @@
 {%- extends 'index.html' -%}
 {%- block body -%}
+
+    {% import "bootstrap/wtf.html" as wtf %}
+
+ {% block page_content %}
+     <h4>uploaded: {% if url %} {{url}}{% endif %}</h4>
+     {{ wtf.quick_form(form, enctype="multipart/form-data") }}
+ {% endblock page_content %}
+
+
 	<div class="post">
 		<div class="row">
 			<div class="col-lg-12">
