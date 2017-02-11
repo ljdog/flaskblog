@@ -45,7 +45,7 @@ bootstrap = Bootstrap(app)
 
 # mypic 的存储位置,
 # UPLOADED_xxxxx_DEST, xxxxx部分就是定义的set的名称, mypi, 下同
-app.config['UPLOADED_MYPIC_DEST'] = './static/img'
+app.config['UPLOADED_MYPIC_DEST'] = './media/img/'
 
 # mypic 允许存储的类型, IMAGES为预设的 tuple('jpg jpe jpeg png gif svg bmp'.split())
 app.config['UPLOADED_MYPIC_ALLOW'] = IMAGES
@@ -397,9 +397,12 @@ def upload_img():
 
     form = UploadForm()
     url = None
+    app.logger.warn(u"进入函数")
+
     if form.validate_on_submit():
-        filename = form.upload.data.filename
-        url = set_mypic.save(form.upload.data, name=filename)
+        # filename = form.upload.data.filename
+
+        url = set_mypic.url(set_mypic.save(form.upload.data))
     return render_template('upload_img.html', form=form, url=url)
 
 ################

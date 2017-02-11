@@ -2,30 +2,38 @@
 {%- extends 'index.html' -%}
 {%- block body -%}
 
+    {% block page_content %}
+        <div class="row" style="position: absolute;top: 60px">
+			<div class="col-lg-12">
+            <img id="uploadPreview" src="">
+            <h4>uploaded: {% if url %} {{ url }}{% endif %}</h4>
+            {#     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">#}
+            {#     {{ wtf.quick_form(form, enctype="multipart/form-data") }}#}
 
+            <form method="POST" enctype="multipart/form-data">
+                {{ form.csrf_token }}
+                <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+                {{ form.upload }}
+                {{ form.submit }}
 
- {% block page_content %}
-     <h4>uploaded: {% if url %} {{url}}{% endif %}</h4>
-     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-     <img id="uploadPreview" src="">
-     {{ wtf.quick_form(form, enctype="multipart/form-data") }}
+            </form>
+           </div>
+		</div>
+    {% endblock page_content %}
 
- {% endblock page_content %}
-
-
-{#	<div class="post">#}
-{#		<div class="row">#}
-{#			<div class="col-lg-12">#}
-{#                <div>#}
-{#                    <img id="uploadPreview" src="">#}
-{#                    <form action={{ url_for('img_upload') }} method="post">#}
-{#                        <input type="file" name="imgupload" id="imgupload">#}
-{#                        <input type="submit" value="Submit">#}
-{#                    </form>#}
-{#                </div>#}
-{#		    </div>#}
-{#		</div>#}
-{#	</div>#}
+	{#<div class="post">
+		<div class="row">
+			<div class="col-lg-12">
+                <div>
+                    <img id="uploadPreview" src="">
+                    <form action={{ url_for('img_upload') }} method="post">
+                        <input type="file" name="imgupload" id="imgupload">
+                        <input type="submit" value="Submit">
+                    </form>
+                </div>
+		    </div>
+		</div>
+	</div>#}
 {%- endblock -%}
 
 {%- block scripts -%}
