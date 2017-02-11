@@ -398,12 +398,12 @@ def upload_img():
     form = UploadForm()
     url = None
     app.logger.warn(u"进入函数")
-
+    url_list = []
     if form.validate_on_submit():
         # filename = form.upload.data.filename
-
-        url = set_mypic.url(set_mypic.save(form.upload.data))
-    return render_template('upload_img.html', form=form, url=url)
+        for filename in request.files.getlist('upload'):
+            url_list.append(set_mypic.url(set_mypic.save(filename)))
+    return render_template('upload_img.html', form=form, url_list=url_list)
 
 ################
 
