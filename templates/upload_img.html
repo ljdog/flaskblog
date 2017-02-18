@@ -1,12 +1,75 @@
+ {% import "bootstrap/wtf.html" as wtf %}
 {%- extends 'index.html' -%}
 {%- block body -%}
-	<div class="post">
+
+    {% block page_content %}
+        <div class="row" style="position: absolute;top: 60px">
+			<div class="col-lg-12">
+            <div id="uploadPreview">
+            </div>
+{#            <h4>uploaded: {% if url %} {{ url }}{% endif %}</h4>#}
+            {#     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">#}
+            {#     {{ wtf.quick_form(form, enctype="multipart/form-data") }}#}
+
+            <form method="POST" enctype="multipart/form-data">
+                {{ form.csrf_token }}
+                <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+                {{ form.upload(multiple="multiple") }}
+                {{ form.submit }}
+
+            </form>
+            <div class="col-lg-6">
+                {% for url in url_list %}
+                <ul>
+                    <li><div>
+                        <span>{{ url }}</span>
+                        <img style="width:200px;height: 200px" src="{{ url }}">
+                    </div></li>
+                </ul>
+                {% endfor %}
+            </div>
+           </div>
+		</div>
+    {% endblock page_content %}
+
+	{#<div class="post">
 		<div class="row">
 			<div class="col-lg-12">
-                <div >
-                    <input type="file" name="imgupload",id="imgupload">
-                    </div>
+                <div>
+                    <img id="uploadPreview" src="">
+                    <form action={{ url_for('img_upload') }} method="post">
+                        <input type="file" name="imgupload" id="imgupload">
+                        <input type="submit" value="Submit">
+                    </form>
+                </div>
 		    </div>
 		</div>
-	</div>
+	</div>#}
+{%- endblock -%}
+
+{%- block scripts -%}
+    {{ super() }}
+    <script>
+        if (typeof FileReader === 'undefined') {
+            alert("抱歉，你的浏览器不支持 FileReader");
+        }
+        $("#upload").change(function (e) {
+            for (var i = 0; i < e.target.files.length; i++) {
+                var file = e.target.files.item(i);
+                var freader = new FileReader();
+                freader.readAsDataURL(file);
+                freader.onload = function (e) {
+                    var src = e.target.result;
+                    //console.log(e.target);
+                    //$("#uploadPreview").attr("src", src);
+                    var xx = document.createElement('img');
+                    $(xx).attr("src", src);
+                    $(xx).attr("width","200px");
+                    $(xx).attr("height","200px");
+
+                    $("#uploadPreview").append(xx);
+                }
+            }
+        });
+    </script>
 {%- endblock -%}

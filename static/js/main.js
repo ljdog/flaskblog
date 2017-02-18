@@ -20,8 +20,11 @@ $(function(){
         var postForm = $('#post-form');
         postForm.find('#preview').val('');
     });
-    $('a.icon').on('click', function(){
-        return confirm('Are you sure?');
+    $('a.icon-edit-sign').on('click', function(){
+        return confirm('Edit?! Are you sure?');
+    });
+    $('a.icon-remove-sign').on('click', function(){
+        return confirm('remove?! Are you sure?');
     });
     $('a.icon icon-remove-sign').on('click', function(){
         return confirm('remove?! Are you sure?');
