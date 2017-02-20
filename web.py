@@ -115,7 +115,7 @@ def single_post(permalink):
 
     mk_body = Markup(mk_body)
     preview = Markup(preview)
-    return render_template('single_post.html', post=post['data'], preview=preview, mk_body=mk_body,meta_title=app.config['BLOG_TITLE'] + '::' + post['data']['title'])
+    return render_template('single_post.html', post=post['data'], preview=preview, mk_body=mk_body, meta_title=app.config['BLOG_TITLE'] + '::' + post['data']['title'])
 
 
 @app.route('/q/<query>', defaults={'page': 1})

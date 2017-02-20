@@ -161,3 +161,6 @@ input[type='checkbox'] {
 @media only screen and (max-width: 767px) {
     .search-form {width:100%;}
 }
+blockquote p{
+    font-size: 16px;
+}
