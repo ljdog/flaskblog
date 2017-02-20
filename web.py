@@ -89,26 +89,30 @@ def posts_by_tag(tag, page):
 
 @app.route('/post/<permalink>')
 def single_post(permalink):
+    from flask import Markup
     post = postClass.get_post_by_permalink(permalink)
+
     if not post['data']:
         abort(404)
     # 更新一下 访问量
     postClass.update_view_count(permalink)
     markdown = mistune.Markdown(escape=True, hard_wrap=True)
     b = post.get('data').get('body')
+    p = post.get('data').get('preview')
 
     app.logger.warn(u"type %s" %(type(b)))
     app.logger.warn(u"数据库中的内容")
     app.logger.warn(b)
-    mk_body = markdown(b)
+
     app.logger.warn(u"markdown############")
 
-    app.logger.warn(mk_body)
-    app.logger.warn(u"mk_body type %s", type(mk_body))
-    from flask import Markup
+    mk_body = markdown(b)
+    preview = markdown(p)
+    # app.logger.warn(mk_body)
+    # app.logger.warn(u"mk_body type %s", type(mk_body))
 
     mk_body = Markup(mk_body)
-    return render_template('single_post.html',post=post['data'], mk_body=mk_body,meta_title=app.config['BLOG_TITLE'] + '::' + post['data']['title'])
+    return render_template('single_post.html', post=post['data'], preview=preview, mk_body=mk_body,meta_title=app.config['BLOG_TITLE'] + '::' + post['data']['title'])
 
 
 @app.route('/q/<query>', defaults={'page': 1})
