@@ -10,6 +10,8 @@ from mdx_code_multiline import MultilineCodeExtension
 from werkzeug.contrib.atom import AtomFeed
 import post
 import user
+import mistune
+
 import pagination
 import settings
 from helper_functions import *
@@ -92,7 +94,21 @@ def single_post(permalink):
         abort(404)
     # 更新一下 访问量
     postClass.update_view_count(permalink)
-    return render_template('single_post.html', post=post['data'], meta_title=app.config['BLOG_TITLE'] + '::' + post['data']['title'])
+    markdown = mistune.Markdown(escape=True, hard_wrap=True)
+    b = post.get('data').get('body')
+
+    app.logger.warn(u"type %s" %(type(b)))
+    app.logger.warn(u"数据库中的内容")
+    app.logger.warn(b)
+    mk_body = markdown(b)
+    app.logger.warn(u"markdown############")
+
+    app.logger.warn(mk_body)
+    app.logger.warn(u"mk_body type %s", type(mk_body))
+    from flask import Markup
+
+    mk_body = Markup(mk_body)
+    return render_template('single_post.html',post=post['data'], mk_body=mk_body,meta_title=app.config['BLOG_TITLE'] + '::' + post['data']['title'])
 
 
 @app.route('/q/<query>', defaults={'page': 1})

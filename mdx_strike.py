@@ -5,6 +5,7 @@ STRIKE_RE = r'(-{2})(.+?)\2'
 
 class StrikeExtension(markdown.Extension):
     def extendMarkdown(self, md, md_globals):
+        return
         md.inlinePatterns.add('strike', markdown.inlinepatterns.SimpleTagPattern(STRIKE_RE, 'strike'), '>strong')
 
 
