@@ -1,5 +1,11 @@
 {%- extends 'index.html' -%}
-{%- block head -%}{%- include 'head.html' -%}{%- block additional_css -%}<link href="{{ url_for('static', filename='css/lightbox.css') }}" rel="stylesheet" media="screen">{%- endblock -%}{%- endblock -%}
+{%- block head -%}
+    {%- include 'head.html' -%}
+    {%- block additional_css -%}
+        <link href="{{ url_for('static', filename='css/lightbox.css') }}" rel="stylesheet" media="screen">
+        <link href="{{ url_for('static', filename='css/github-markdown.css') }}" rel="stylesheet" media="screen">
+    {%- endblock -%}
+{%- endblock -%}
 {%- block body -%}
 	{%- if post -%}
 		<div class="post clearfix">
@@ -19,6 +25,8 @@
 					<div class="content article">
 						{{ post['preview']|markdown }}
 						{{ post['body']|markdown }}
+                        {{ mk_body }}
+{#                        {{ tt }}#}
 					</div>
 					<div class="infopanel">
 						<div class="tags">
