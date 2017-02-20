@@ -216,6 +216,8 @@ def new_post():
 @login_required()
 def post_preview():
     post = session.get('post-preview')
+    if not post:
+        return u'<h3>session not get</h3>'
     return render_template('preview.html', post=post, meta_title='Preview post::' + post['title'])
 
 
