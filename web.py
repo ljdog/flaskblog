@@ -103,6 +103,8 @@ def single_post(permalink):
     app.logger.warn(u"type %s" %(type(b)))
     app.logger.warn(u"数据库中的内容")
     app.logger.warn(b)
+    app.logger.warn(u"数据库中的内容")
+    app.logger.warn(p)
 
     app.logger.warn(u"markdown############")
 
@@ -112,6 +114,7 @@ def single_post(permalink):
     # app.logger.warn(u"mk_body type %s", type(mk_body))
 
     mk_body = Markup(mk_body)
+    preview = Markup(preview)
     return render_template('single_post.html', post=post['data'], preview=preview, mk_body=mk_body,meta_title=app.config['BLOG_TITLE'] + '::' + post['data']['title'])
 
 
