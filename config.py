@@ -11,6 +11,9 @@ POSTS_COLLECTION = DATABASE.posts
 USERS_COLLECTION = DATABASE.users
 SETTINGS_COLLECTION = DATABASE.settings
 
+# 保存上传的图片
+UPDATE_INFO = DATABASE.media
+
 SECRET_KEY = ""
 basedir = os.path.abspath(os.path.dirname(__file__))
 secret_file = os.path.join(basedir, '.secret')
@@ -34,4 +37,4 @@ else:
 
 LOG_FILE = "app.log"
 
-DEBUG = True  # set it to False on production
+DEBUG = False  # set it to False on production

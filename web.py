@@ -1,4 +1,4 @@
-#coding:utf-8
+# coding:utf-8
 import cgi
 import os
 from flask import Flask, render_template, abort, url_for, request, flash, session, redirect
@@ -11,7 +11,6 @@ from werkzeug.contrib.atom import AtomFeed
 import post
 import user
 import mistune
-
 import pagination
 import settings
 from helper_functions import *
@@ -24,7 +23,8 @@ from flask_bootstrap import Bootstrap
 from flask import Flask, render_template
 from flask_uploads import UploadSet, IMAGES, configure_uploads
 from flask_wtf import Form
-from wtforms import SubmitField
+from wtforms import SubmitField,StringField
+from wtforms.validators import DataRequired
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 from flask_bootstrap import Bootstrap
 # from forms import UploadForm
@@ -62,6 +62,7 @@ class UploadForm(Form):
     # 文件field设置为‘必须的’，过滤规则设置为‘set_mypic’
     upload = FileField('image', validators=[
         FileRequired(), FileAllowed(set_mypic, 'you can upload images only!')])
+    explain = StringField(u'图片说明',validators=[DataRequired()])
     submit = SubmitField('ok')
 #####
 
@@ -419,15 +420,19 @@ def blog_settings():
 ################
 @app.route('/upload_img', methods=('GET', 'POST'))
 def upload_img():
-
+    from datetime import datetime
+    import time
     form = UploadForm()
     url = None
     app.logger.warn(u"进入函数")
     url_list = []
     if form.validate_on_submit():
+        # 因为每个图片要写上 图片说明 所有一次只能上传一张图片
+        # for filename in request.files.getlist('upload'):
         # filename = form.upload.data.filename
-        for filename in request.files.getlist('upload'):
-            url_list.append(set_mypic.url(set_mypic.save(filename)))
+        str_folder = str(datetime.today())[:7]
+        filename = form.upload.data.filename[:-4] + "_" + str(time.time())[:11]
+        url_list.append(set_mypic.url(set_mypic.save(form.upload.data, folder=str_folder, name=filename)))
     return render_template('upload_img.html', form=form, url_list=url_list)
 
 ################

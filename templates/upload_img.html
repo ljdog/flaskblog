@@ -11,10 +11,11 @@
             {#     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">#}
             {#     {{ wtf.quick_form(form, enctype="multipart/form-data") }}#}
 
-            <form method="POST" enctype="multipart/form-data">
+            <form method="POST" enctype="multipart/form-data" onsubmit="return check_fun();">
                 {{ form.csrf_token }}
                 <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-                {{ form.upload(multiple="multiple") }}
+                {{ form.upload(multiple="multiple") }} <br/>
+                {{ form.explain }} <br/>
                 {{ form.submit }}
 
             </form>
@@ -49,7 +50,19 @@
 
 {%- block scripts -%}
     {{ super() }}
+
     <script>
+
+        function check_fun() {
+            var exp = document.getElementById('explain');
+            if(exp.value.length >= 8){
+                return true;
+            }else{
+                alert('请输入说明文字');
+                return false;
+            }
+        }
+
         if (typeof FileReader === 'undefined') {
             alert("抱歉，你的浏览器不支持 FileReader");
         }
