@@ -93,7 +93,6 @@ def posts_by_tag(tag, page):
 @app.route('/manage_trifles')
 @login_required()
 def manage_trifles():
-    app.logger.error(u"~~~~")
     return render_template('manage_trifles.html')
 
 
