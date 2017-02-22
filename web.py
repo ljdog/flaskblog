@@ -435,9 +435,14 @@ def upload_img():
         filename = form.upload.data.filename[:-4] + "_" + str(time.time())[:11]
         url_list.append(set_mypic.url(set_mypic.save(form.upload.data, folder=str_folder, name=filename)))
 
-        mediaClass.set_img_info(url_list[0], filename, form.explain)
+        mediaClass.set_img_info(url_list[0], filename[:-1], request.form.get('explain'))
 
     return render_template('upload_img.html', form=form, url_list=url_list)
+
+@app.route('/upload_img_info')
+def get_img_info():
+    rst_img_list = mediaClass.get_all()
+    return render_template('img_info.html', rst_img_list=rst_img_list)
 
 ################
 

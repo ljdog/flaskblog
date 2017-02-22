@@ -12,8 +12,16 @@ class Media:
 
     def get_all(self):
         cursor = self.collection.find()
+        rst = []
         for item in cursor:
-            pass
+            tt = dict()
+            tt['optime'] = item.get('optime')
+            tt['status'] = item.get('optime')
+            tt['address'] = item.get('address')
+            tt['filename'] = item.get('filename')
+            tt['describe'] = item.get('describe')
+            rst.append(tt)
+        return rst
 
     def set_img_info(self, address, img_filename, describe):
         """
@@ -23,7 +31,11 @@ class Media:
         cur_time = get_cur_time()
         tt = dict()
         tt['optime'] = cur_time
+        tt['status'] = 'use'
         tt['address'] = address
         tt['filename'] = img_filename
         tt['describe'] = describe
         self.collection.insert(tt)
+
+    def update_img_status(self,):
+        pass

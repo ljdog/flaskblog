@@ -1,0 +1,28 @@
+{%- extends 'index.html' -%}
+{%- block body -%}
+    <div class="post clearfix">
+        <div class="row">
+            <div class="col-lg-8">
+                <table>
+                    <tr>
+                        <td>时间</td>
+                        <td>状态</td>
+                        <td>url</td>
+                        <td>文件名</td>
+                        <td>描述</td>
+                    </tr>
+                    {% for item in rst_img_list %}
+                        <tr>
+                            <td>item.optime</td>
+                            <td>item.status</td>
+                            <td>item.address</td>
+                            <td>item.filename</td>
+                            <td>item.describe</td>
+                        </tr>
+
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+{%- endblock -%}
