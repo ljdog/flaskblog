@@ -89,6 +89,14 @@ def posts_by_tag(tag, page):
     return render_template('index.html', posts=posts['data'], pagination=pag, meta_title='Posts by tag: ' + tag)
 
 
+
+@app.route('/manage_trifles')
+@login_required()
+def manage_trifles():
+    app.logger.error(u"~~~~")
+    return render_template('manage_trifles.html')
+
+
 @app.route('/post/<permalink>')
 def single_post(permalink):
     from flask import Markup
