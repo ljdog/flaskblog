@@ -10,6 +10,7 @@ from mdx_code_multiline import MultilineCodeExtension
 from werkzeug.contrib.atom import AtomFeed
 import post
 import user
+import media
 import mistune
 import pagination
 import settings
@@ -433,6 +434,9 @@ def upload_img():
         str_folder = str(datetime.today())[:7]
         filename = form.upload.data.filename[:-4] + "_" + str(time.time())[:11]
         url_list.append(set_mypic.url(set_mypic.save(form.upload.data, folder=str_folder, name=filename)))
+
+        mediaClass.set_img_info(url_list[0], filename, form.explain)
+
     return render_template('upload_img.html', form=form, url_list=url_list)
 
 ################
@@ -551,6 +555,7 @@ def format_datetime_filter(input_value, format_="%a, %d %b %Y"):
 settingsClass = settings.Settings(app.config)
 postClass = post.Post(app.config)
 userClass = user.User(app.config)
+mediaClass = media.Media(app.config)
 
 app.jinja_env.globals['url_for_other_page'] = url_for_other_page
 app.jinja_env.globals['meta_description'] = app.config['BLOG_DESCRIPTION']
