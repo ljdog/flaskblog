@@ -1,28 +1,44 @@
-{%- extends 'index.html' -%}
-{%- block body -%}
-    <div class="post clearfix">
-        <div class="row">
-            <div class="col-lg-12">
-                <table class="table table-hover">
-                    <tr>
-                        <td>时间</td>
-                        <td>状态</td>
-                        <td>url</td>
-                        <td>文件名</td>
-                        <td>描述</td>
-                    </tr>
-                    {% for item in rst_img_list %}
+<!DOCTYPE html>
+<html lang="en">
+{%- block head -%}{%- include 'head.html' -%}{%- endblock -%}
+<body>
+<div id="wrapper">
+    {%- block nav -%}{%- include 'nav.html' -%}{%- endblock -%}
+    <div >
+        <div class="post clearfix">
+            <div class="row">
+                <div>
+                    <table class="table table-hover" style="text-align:center;">
                         <tr>
-                            <td>{{ item.optime }}</td>
-                            <td>{{ item.status }}</td>
-                            <td>{{ item.address }}</td>
-                            <td>{{ item.filename }}</td>
-                            <td>{{ item.describe }}</td>
+                            <td>时间</td>
+                            <td>状态</td>
+                            <td>url</td>
+                            <td>文件名</td>
+                            <td>描述</td>
+                            <td >显示</td>
                         </tr>
+                        {% for item in rst_img_list %}
+                            <tr>
+                                <td>{{ item.optime }}</td>
+                                <td>{{ item.status }}</td>
+                                <td>{{ item.address }}</td>
+                                <td>{{ item.filename }}</td>
+                                <td>{{ item.describe }}</td>
+                                <td style="width: 200px;height: 300px"><img src="{{ item.address }}"></td>
+                            </tr>
 
-                    {% endfor %}
-                </table>
+                        {% endfor %}
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
-{%- endblock -%}
+{%- include 'footer.html' -%}
+		{%- block scripts -%}
+			<script src="//codeorigin.jquery.com/jquery-2.0.3.min.js"></script>
+			<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+			{{ moment.include_moment() }}
+            {%- block additional_js -%}{%- endblock -%}
+			<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+		{%- endblock -%}
+	</body>
+</html>

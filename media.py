@@ -16,7 +16,7 @@ class Media:
         for item in cursor:
             tt = dict()
             tt['optime'] = item.get('optime')
-            tt['status'] = item.get('optime')
+            tt['status'] = item.get('status')
             tt['address'] = item.get('address')
             tt['filename'] = item.get('filename')
             tt['describe'] = item.get('describe')
