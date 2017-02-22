@@ -420,6 +420,7 @@ def blog_settings():
 
 ################
 @app.route('/upload_img', methods=('GET', 'POST'))
+@login_required()
 def upload_img():
     from datetime import datetime
     import time
@@ -439,7 +440,9 @@ def upload_img():
 
     return render_template('upload_img.html', form=form, url_list=url_list)
 
+
 @app.route('/upload_img_info')
+@login_required()
 def get_img_info():
     rst_img_list = mediaClass.get_all()
     return render_template('img_info.html', rst_img_list=rst_img_list)
