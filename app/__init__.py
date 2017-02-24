@@ -17,19 +17,19 @@ import settings
 from helper_functions import *
 from flask.ext.moment import Moment
 from flask import current_app
-
-
 from flask.ext.uploads import UploadSet
+from flask_script import Manager
+
+
 from flask_bootstrap import Bootstrap
 from flask import Flask, render_template
 from flask_uploads import UploadSet, IMAGES, configure_uploads
-from flask_wtf import Form
-from wtforms import SubmitField,StringField
-from wtforms.validators import DataRequired
-from flask_wtf.file import FileField, FileAllowed, FileRequired
+
+
+
 from flask_bootstrap import Bootstrap
 bootstrap = Bootstrap()
-
+manager = Manager()
 
 
 def create_app():
@@ -43,7 +43,8 @@ def create_app():
     md.register_extension(MultilineCodeExtension)
     app.config.from_object('config')
     bootstrap.init_app(app)
-    
+
+
     # 新建一个set用于设置文件类型、过滤等
     set_mypic = UploadSet('mypic')  # mypic
     # mypic 的存储位置,
@@ -52,4 +53,11 @@ def create_app():
 
     # mypic 允许存储的类型, IMAGES为预设的 tuple('jpg jpe jpeg png gif svg bmp'.split())
     app.config['UPLOADED_MYPIC_ALLOW'] = IMAGES
+
+    from .main import main as main_bp
+    app.register_blueprint(main, url_prefix='/main')
+
+    from .mg import mg as mg_bl
+    app.register_blueprint(mg_bl, url_prefix='/mg')
+
     return app
