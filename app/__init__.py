@@ -18,7 +18,7 @@ manager = Manager()
 set_mypic = UploadSet('mypic')  # mypic
 
 def create_app():
-    app = Flask('FlaskBlog')
+    app = Flask(__name__)
     moment = Moment(app)
 
     md = Markdown(app)

@@ -1,10 +1,12 @@
 # coding:utf-8
+from flask import render_template
 from . import mg as mg_bp
 from .model import UploadForm
 from .. import set_mypic
 from ..share.helper_functions import login_required
+from flask import request
 import config
-from flask import render_template
+
 from ..share.media import Media
 from manage import app
 
@@ -12,11 +14,11 @@ mediaClass = Media(app.config)
 
 @mg_bp.route('/')
 def index():
-    return 'mg index'
+    return render_template('mg/index.html')
 
 @mg_bp.route('/upload_img', methods=('GET', 'POST'))
 # @login_required()
-def upload_img(request):
+def upload_img():
     from datetime import datetime
     import time
     form = UploadForm()
@@ -33,7 +35,7 @@ def upload_img(request):
 
         mediaClass.set_img_info(url_list[0], filename[:-1], request.form.get('explain'))
 
-    return render_template('upload_img.html', form=form, url_list=url_list)
+    return render_template('mg/upload_img.html', form=form, url_list=url_list)
 
 
 @mg_bp.route('/upload_img_info')
