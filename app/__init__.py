@@ -1,36 +1,21 @@
 # coding:utf-8
-import cgi
-import os
-from flask import Flask, render_template, abort, url_for, request, flash, session, redirect
-from flaskext.markdown import Markdown
-from mdx_github_gists import GitHubGistExtension
-from mdx_strike import StrikeExtension
-from mdx_quote import QuoteExtension
-from mdx_code_multiline import MultilineCodeExtension
-from werkzeug.contrib.atom import AtomFeed
-import post
-import user
-import media
-import mistune
-import pagination
-import settings
-from helper_functions import *
+from flask import Flask
 from flask.ext.moment import Moment
-from flask import current_app
-from flask.ext.uploads import UploadSet
+from flask_bootstrap import Bootstrap
 from flask_script import Manager
+from flask_uploads import UploadSet, IMAGES
+from flaskext.markdown import Markdown
 
+from app.share.helper_functions import *
+from mdx_code_multiline import MultilineCodeExtension
+from mdx_github_gists import GitHubGistExtension
+from mdx_quote import QuoteExtension
+from mdx_strike import StrikeExtension
 
-from flask_bootstrap import Bootstrap
-from flask import Flask, render_template
-from flask_uploads import UploadSet, IMAGES, configure_uploads
-
-
-
-from flask_bootstrap import Bootstrap
 bootstrap = Bootstrap()
 manager = Manager()
-
+# 新建一个set用于设置文件类型、过滤等
+set_mypic = UploadSet('mypic')  # mypic
 
 def create_app():
     app = Flask('FlaskBlog')
@@ -45,8 +30,7 @@ def create_app():
     bootstrap.init_app(app)
 
 
-    # 新建一个set用于设置文件类型、过滤等
-    set_mypic = UploadSet('mypic')  # mypic
+
     # mypic 的存储位置,
     # UPLOADED_xxxxx_DEST, xxxxx部分就是定义的set的名称, mypi, 下同
     app.config['UPLOADED_MYPIC_DEST'] = './media/img/'
@@ -55,7 +39,7 @@ def create_app():
     app.config['UPLOADED_MYPIC_ALLOW'] = IMAGES
 
     from .main import main as main_bp
-    app.register_blueprint(main, url_prefix='/main')
+    app.register_blueprint(main_bp, url_prefix='/')
 
     from .mg import mg as mg_bl
     app.register_blueprint(mg_bl, url_prefix='/mg')
