@@ -14,6 +14,7 @@ from mdx_strike import StrikeExtension
 
 bootstrap = Bootstrap()
 manager = Manager()
+md = Markdown()
 # 新建一个set用于设置文件类型、过滤等
 set_mypic = UploadSet('mypic')  # mypic
 

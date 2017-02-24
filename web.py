@@ -5,14 +5,7 @@
 #
 # #####
 #
-# @app.route('/', defaults={'page': 1})
-# @app.route('/page-<int:page>')
-# def index(page):
-#     skip = (page - 1) * int(app.config['PER_PAGE'])
-#     posts = postClass.get_posts(int(app.config['PER_PAGE']), skip)
-#     count = postClass.get_total_count()
-#     pag = pagination.Pagination(page, app.config['PER_PAGE'], count)
-#     return render_template('index.html', posts=posts['data'], pagination=pag, meta_title=app.config['BLOG_TITLE'])
+
 #
 #
 # @app.route('/tag/<tag>', defaults={'page': 1})
@@ -168,21 +161,7 @@
 #     return render_template('preview.html', post=post, meta_title='Preview post::' + post['title'])
 #
 #
-# @app.route('/posts_list', defaults={'page': 1})
-# @app.route('/posts_list/page-<int:page>')
-# @login_required()
-# def posts(page):
-#     session.pop('post-preview', None)
-#     skip = (page - 1) * int(app.config['PER_PAGE'])
-#     posts = postClass.get_posts(int(app.config['PER_PAGE']), skip)
-#     count = postClass.get_total_count()
-#     pag = pagination.Pagination(page, app.config['PER_PAGE'], count)
-#
-#     if not posts['data']:
-#         abort(404)
-#
-#     return render_template('posts.html', posts=posts['data'], pagination=pag, meta_title='Posts')
-#
+
 #
 # @app.route('/post_edit?id=<id>')
 # @login_required()
@@ -216,48 +195,12 @@
 #     return redirect(url_for('posts'))
 #
 #
-# @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     error = False
-#     error_type = 'validate'
-#     if request.method == 'POST':
-#         username = request.form.get('login-username')
-#         password = request.form.get('login-password')
-#         if not username or not password:
-#             error = True
-#         else:
-#             user_data = userClass.login(username.lower().strip(), password)
-#             if user_data['error']:
-#                 error = True
-#                 error_type = 'login'
-#                 flash(user_data['error'], 'error')
-#             else:
-#                 userClass.start_session(user_data['data'])
-#                 flash('You are logged in!', 'success')
-#                 return redirect(url_for('posts'))
-#     else:
-#         if session.get('user'):
-#             return redirect(url_for('posts'))
+
 #
-#     return render_template('login.html',
-#                            meta_title='Login',
-#                            error=error,
-#                            error_type=error_type)
+
 #
 #
-# @app.route('/logout')
-# def logout():
-#     if userClass.logout():
-#         flash('You are logged out!', 'success')
-#     return redirect(url_for('login'))
-#
-#
-# @app.route('/users')
-# @login_required()
-# def users_list():
-#     users = userClass.get_users()
-#     return render_template('users.html', users=users['data'], meta_title='Users')
-#
+
 #
 # @app.route('/add_user')
 # @login_required()
@@ -466,8 +409,6 @@
 #
 #
 # settingsClass = settings.Settings(app.config)
-#
-# userClass = user.User(app.config)
 #
 #
 # app.jinja_env.globals['url_for_other_page'] = url_for_other_page
