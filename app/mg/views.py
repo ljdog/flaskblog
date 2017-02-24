@@ -40,5 +40,6 @@ def upload_img(request):
 #@login_required()
 def get_img_info():
     rst_img_list = mediaClass.get_all()
-    return render_template('img_info.html', rst_img_list=rst_img_list)
+    app.logger.error(rst_img_list)
+    return render_template('mg/img_info.html', rst_img_list=rst_img_list)
 
