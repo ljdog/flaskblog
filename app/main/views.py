@@ -1,13 +1,17 @@
-from . import main
 from flask import request, url_for, render_template, flash, redirect, session, abort
+
 from post import Post
 from settings import Settings
-from manage import app
+from . import main
+
+# from flask import current_app as app
 from app.share.helper_functions import make_external
 from pagination import Pagination
 from user import User
 from app.share.helper_functions import login_required, extract_tags
 import cgi
+from manage import apps
+app = apps
 
 postClass = Post(app.config)
 userClass = User(app.config)

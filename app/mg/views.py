@@ -1,15 +1,17 @@
 # coding:utf-8
 from flask import render_template
+from flask import request
+
+from config import UPDATE_INFO
+from manage import apps
 from . import mg as mg_bp
 from .model import UploadForm
 from .. import set_mypic
-from ..share.helper_functions import login_required
-from flask import request
-import config
-
 from ..share.media import Media
-from manage import app
 
+# import manage
+x = UPDATE_INFO
+app = apps
 mediaClass = Media(app.config)
 
 @mg_bp.route('/')
@@ -23,7 +25,7 @@ def upload_img():
     import time
     form = UploadForm()
     url = None
-    app.logger.warn(u"进入函数")
+   # app.logger.warn(u"进入函数")
     url_list = []
     if form.validate_on_submit():
         # 因为每个图片要写上 图片说明 所有一次只能上传一张图片
@@ -42,6 +44,6 @@ def upload_img():
 #@login_required()
 def get_img_info():
     rst_img_list = mediaClass.get_all()
-    app.logger.error(rst_img_list)
+    # app.logger.error(rst_img_list)
     return render_template('mg/img_info.html', rst_img_list=rst_img_list)
 
