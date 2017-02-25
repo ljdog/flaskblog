@@ -21,10 +21,7 @@
 #
 #
 #
-# @app.route('/manage_trifles')
-# @login_required()
-# def manage_trifles():
-#     return render_template('manage_trifles.html')
+
 #
 #
 # @app.route('/post/<permalink>')
@@ -85,72 +82,7 @@
 #         return redirect(url_for('index'))
 #
 #
-# @app.route('/newpost', methods=['GET', 'POST'])
-# @login_required()
-# def new_post():
-#     error = False
-#     error_type = 'validate'
-#     if request.method == 'POST':
-#         post_title = request.form.get('post-title').strip()
-#         post_full = request.form.get('post-full')
-#
-#         if not post_title or not post_full:
-#             error = True
-#         else:
-#             tags = cgi.escape(request.form.get('post-tags'))
-#             tags_array = extract_tags(tags)
-#
-#             post_short = request.form.get('post-short')
-#             if not post_short:
-#                 post_short = post_full[:200]
-#
-#             post_data = {'title': post_title,
-#                          'preview': post_short,
-#                          'body': post_full,
-#                          'tags': tags_array,
-#                          'author': session['user']['username']}
-#
-#             post = postClass.validate_post_data(post_data)
-#             if request.form.get('post-preview') == '1':
-#                 session['post-preview'] = post
-#                 session[
-#                     'post-preview']['action'] = 'edit' if request.form.get('post-id') else 'add'
-#                 if request.form.get('post-id'):
-#                     session[
-#                         'post-preview']['redirect'] = url_for('post_edit', id=request.form.get('post-id'))
-#                 else:
-#                     session['post-preview']['redirect'] = url_for('new_post')
-#                 return redirect(url_for('post_preview'))
-#             else:
-#                 session.pop('post-preview', None)
-#
-#                 if request.form.get('post-id'):
-#                     response = postClass.edit_post(
-#                         request.form['post-id'], post)
-#                     if not response['error']:
-#                         flash('Post updated!', 'success')
-#                     else:
-#                         flash(response['error'], 'error')
-#                     return redirect(url_for('posts'))
-#                 else:
-#
-#                     post['view_count'] = 1
-#
-#                     response = postClass.create_new_post(post)
-#                     if response['error']:
-#                         error = True
-#                         error_type = 'post'
-#                         flash(response['error'], 'error')
-#                     else:
-#                         flash('New post created!', 'success')
-#     else:
-#         if session.get('post-preview') and session['post-preview']['action'] == 'edit':
-#             session.pop('post-preview', None)
-#     return render_template('new_post.html',
-#                            meta_title='New post',
-#                            error=error,
-#                            error_type=error_type)
-#
+
 #
 # @app.route('/post_preview')
 # @login_required()
@@ -262,36 +194,7 @@
 
 #
 #
-# @app.route('/settings', methods=['GET', 'POST'])
-# @login_required()
-# def blog_settings():
-#     error = None
-#     error_type = 'validate'
-#     if request.method == 'POST':
-#         blog_data = {
-#             'title': request.form.get('blog-title', None),
-#             'description': request.form.get('blog-description', None),
-#             'per_page': request.form.get('blog-perpage', None),
-#             'text_search': request.form.get('blog-text-search', None)
-#         }
-#         blog_data['text_search'] = 1 if blog_data['text_search'] else 0
-#         for key, value in blog_data.items():
-#             if not value and key != 'text_search' and key != 'description':
-#                 error = True
-#                 break
-#         if not error:
-#             update_result = settingsClass.update_settings(blog_data)
-#             if update_result['error']:
-#                 flash(update_result['error'], 'error')
-#             else:
-#                 flash('Settings updated!', 'success')
-#                 return redirect(url_for('blog_settings'))
-#
-#     return render_template('settings.html',
-#                            default_settings=app.config,
-#                            meta_title='Settings',
-#                            error=error,
-#                            error_type=error_type)
+
 #
 # ################
 #
