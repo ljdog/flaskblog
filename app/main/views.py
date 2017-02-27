@@ -1,5 +1,5 @@
-from flask import request, url_for, render_template, flash, redirect, session, abort,current_app
-
+from flask import request, url_for, render_template, flash, redirect, session, abort, current_app
+from app import postClass, userClass, settingsClass
 from post import Post
 from settings import Settings
 from . import main
@@ -7,11 +7,10 @@ from . import main
 # from flask import current_app as app
 from app.share.helper_functions import make_external
 from pagination import Pagination
-from app import postClass,userClass,settingsClass
+
 from user import User
 from app.share.helper_functions import login_required, extract_tags
 import cgi
-
 
 
 @main.route('/', defaults={'page': 1})

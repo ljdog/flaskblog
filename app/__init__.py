@@ -10,10 +10,10 @@ from mdx_code_multiline import MultilineCodeExtension
 from mdx_github_gists import GitHubGistExtension
 from mdx_quote import QuoteExtension
 from mdx_strike import StrikeExtension
-from main.user import User
-from main.settings import Settings
-from main.post import Post
-from share.media import Media
+from app.main.user import User
+from app.main.settings import Settings
+from app.main.post import Post
+from app.share.media import Media
 
 bootstrap = Bootstrap()
 manager = Manager()
