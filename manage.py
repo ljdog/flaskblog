@@ -1,10 +1,12 @@
-# coding:utf-8
+#coding:utf-8
 from flask_script import Manager
 
 from app import create_app
+app = create_app()
 
-apps = create_app()
-manager = Manager(apps)
+manager = Manager(app)
+
+
 if __name__ == '__main__':
-    apps.debug = True
+    app.debug = True
     manager.run()

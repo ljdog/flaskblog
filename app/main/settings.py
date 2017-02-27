@@ -3,16 +3,25 @@ from flask import session
 
 class Settings:
 
-    def __init__(self, default_config):
-        self.collection = default_config['SETTINGS_COLLECTION']
+    def __init__(self, default_config =None):
+        if default_config:
+            self.collection = default_config['SETTINGS_COLLECTION']
+            self.config = default_config
+            self.config['PER_PAGE'] = 15
+            self.config['SEARCH'] = False
+            self.config['BLOG_TITLE'] = 'Blog'
+            self.config['BLOG_DESCRIPTION'] = ''
+            self.debug_mode = default_config['DEBUG']
 
+        self.response = {'error': None, 'data': None}
+
+    def init(self,default_config):
+        self.collection = default_config['SETTINGS_COLLECTION']
         self.config = default_config
         self.config['PER_PAGE'] = 15
         self.config['SEARCH'] = False
         self.config['BLOG_TITLE'] = 'Blog'
         self.config['BLOG_DESCRIPTION'] = ''
-
-        self.response = {'error': None, 'data': None}
         self.debug_mode = default_config['DEBUG']
 
     def get_config(self):

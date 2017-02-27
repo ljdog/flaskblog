@@ -3,19 +3,17 @@ from flask import render_template
 from flask import request
 
 from config import UPDATE_INFO
-from manage import apps
 from . import mg as mg_bp
 from .model import UploadForm
 from .. import set_mypic
-from ..share.media import Media
+from app import mediaClass
 
 # import manage
-x = UPDATE_INFO
-app = apps
-mediaClass = Media(app.config)
+
 
 @mg_bp.route('/')
 def index():
+    print(list(mediaClass.find()))
     return render_template('mg/index.html')
 
 @mg_bp.route('/upload_img', methods=('GET', 'POST'))

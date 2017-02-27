@@ -8,12 +8,18 @@ from flask import session
 
 class User:
 
-    def __init__(self, default_config):
-        self.collection = default_config['USERS_COLLECTION']
+    def __init__(self, default_config=None):
+        if default_config:
+            self.collection = default_config['USERS_COLLECTION']
+            self.debug_mode = default_config['DEBUG']
+
         self.username = None
         self.email = None
         self.session_key = 'user'
         self.response = {'error': None, 'data': None}
+
+    def init(self, default_config):
+        self.collection = default_config['USERS_COLLECTION']
         self.debug_mode = default_config['DEBUG']
 
     def login(self, username, password):

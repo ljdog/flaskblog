@@ -1,4 +1,4 @@
-from flask import request, url_for, render_template, flash, redirect, session, abort
+from flask import request, url_for, render_template, flash, redirect, session, abort,current_app
 
 from post import Post
 from settings import Settings
@@ -7,24 +7,20 @@ from . import main
 # from flask import current_app as app
 from app.share.helper_functions import make_external
 from pagination import Pagination
+from app import postClass,userClass,settingsClass
 from user import User
 from app.share.helper_functions import login_required, extract_tags
 import cgi
-from manage import apps
-app = apps
 
-postClass = Post(app.config)
-userClass = User(app.config)
-settingsClass = Settings(app.config)
 
 
 @main.route('/', defaults={'page': 1})
 @main.route('/page-<int:page>')
 def index(page):
-    skip = (page - 1) * int(app.config['PER_PAGE'])
-    posts = postClass.get_posts(int(app.config['PER_PAGE']), skip)
+    skip = (page - 1) * int(current_app.config['PER_PAGE'])
+    posts = postClass.get_posts(int(current_app.config['PER_PAGE']), skip)
     count = postClass.get_total_count()
-    pag = Pagination(page, app.config['PER_PAGE'], count)
+    pag = Pagination(page, current_app.config['PER_PAGE'], count)
     return render_template('index.html', posts=posts['data'], pagination=pag, meta_title=app.config['BLOG_TITLE'])
 
 
@@ -76,10 +72,10 @@ def users_list():
 @login_required()
 def posts(page):
     session.pop('post-preview', None)
-    skip = (page - 1) * int(app.config['PER_PAGE'])
-    posts = postClass.get_posts(int(app.config['PER_PAGE']), skip)
+    skip = (page - 1) * int(current_app.config['PER_PAGE'])
+    posts = postClass.get_posts(int(current_app.config['PER_PAGE']), skip)
     count = postClass.get_total_count()
-    pag = Pagination(page, app.config['PER_PAGE'], count)
+    pag = Pagination(page, current_app.config['PER_PAGE'], count)
 
     if not posts['data']:
         abort(404)
@@ -180,7 +176,7 @@ def blog_settings():
                 return redirect(url_for('blog_settings'))
 
     return render_template('settings.html',
-                           default_settings=app.config,
+                           default_settings=current_app.config,
                            meta_title='Settings',
                            error=error,
                            error_type=error_type)
