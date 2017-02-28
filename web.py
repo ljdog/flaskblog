@@ -70,17 +70,7 @@
 #     return render_template('index.html', posts=posts['data'], pagination=pag, meta_title='Search results')
 #
 #
-# @app.route('/search', methods=['GET', 'POST'])
-# def search():
-#     if request.method != 'POST':
-#         return redirect(url_for('index'))
-#
-#     query = request.form.get('query', None)
-#     if query:
-#         return redirect(url_for('search_results', query=query))
-#     else:
-#         return redirect(url_for('index'))
-#
+
 #
 
 #
@@ -276,30 +266,7 @@
 #                            meta_title='Install')
 #
 #
-# @app.before_request
-# def csrf_protect():
-#     if request.method == "POST":
-#         token = session.pop('_csrf_token', None)
-#         if not token or token != request.form.get('_csrf_token'):
-#             abort(400)
-#
-#
-# @app.before_request
-# def is_installed():
-#     app.config = settingsClass.get_config()
-#     app.jinja_env.globals['meta_description'] = app.config['BLOG_DESCRIPTION']
-#     if not session.get('installed', None):
-#         if url_for('static', filename='') not in request.path and request.path != url_for('install'):
-#             if not settingsClass.is_installed():
-#                 return redirect(url_for('install'))
-#
-#
-# @app.before_request
-# def set_globals():
-#     app.jinja_env.globals['csrf_token'] = generate_csrf_token
-#     app.jinja_env.globals['recent_posts'] = postClass.get_posts(10, 0)['data']
-#     app.jinja_env.globals['tags'] = postClass.get_tags()['data']
-#
+
 #
 # @app.errorhandler(404)
 # def page_not_found(error):

@@ -1,23 +1,20 @@
 # coding:utf-8
 from flask import render_template
 from flask import request
-
 from config import UPDATE_INFO
 from . import mg as mg_bp
 from .model import UploadForm
 from .. import set_mypic
-from app import mediaClass
-
-# import manage
-
+import app
+from app.share.helper_functions import login_required
 
 @mg_bp.route('/')
 def index():
-    print(list(mediaClass.find()))
-    return render_template('mg/index.html')
+    rst = (list(app.mediaClass.get_all()))
+    return render_template('mg/index.html',rst=rst )
 
 @mg_bp.route('/upload_img', methods=('GET', 'POST'))
-# @login_required()
+#@login_required()
 def upload_img():
     from datetime import datetime
     import time
@@ -33,15 +30,15 @@ def upload_img():
         filename = form.upload.data.filename[:-4] + "_" + str(time.time())[:11]
         url_list.append(set_mypic.url(set_mypic.save(form.upload.data, folder=str_folder, name=filename)))
 
-        mediaClass.set_img_info(url_list[0], filename[:-1], request.form.get('explain'))
+        app.mediaClass.set_img_info(url_list[0], filename[:-1], request.form.get('explain'))
 
     return render_template('mg/upload_img.html', form=form, url_list=url_list)
 
 
 @mg_bp.route('/upload_img_info')
-#@login_required()
+@login_required()
 def get_img_info():
-    rst_img_list = mediaClass.get_all()
+    rst_img_list = app.mediaClass.get_all()
     # app.logger.error(rst_img_list)
     return render_template('mg/img_info.html', rst_img_list=rst_img_list)
 

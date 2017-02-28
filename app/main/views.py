@@ -1,14 +1,12 @@
 from flask import request, url_for, render_template, flash, redirect, session, abort, current_app
-from app import postClass, userClass, settingsClass
 from post import Post
 from settings import Settings
 from . import main
-
-# from flask import current_app as app
+import app
 from app.share.helper_functions import make_external
 from pagination import Pagination
-
 from user import User
+from app.share.helper_functions import generate_csrf_token
 from app.share.helper_functions import login_required, extract_tags
 import cgi
 
@@ -17,15 +15,15 @@ import cgi
 @main.route('/page-<int:page>')
 def index(page):
     skip = (page - 1) * int(current_app.config['PER_PAGE'])
-    posts = postClass.get_posts(int(current_app.config['PER_PAGE']), skip)
-    count = postClass.get_total_count()
+    posts = app.postClass.get_posts(int(current_app.config['PER_PAGE']), skip)
+    count = app.postClass.get_total_count()
     pag = Pagination(page, current_app.config['PER_PAGE'], count)
     return render_template('index.html', posts=posts['data'], pagination=pag, meta_title=app.config['BLOG_TITLE'])
 
 
 @main.route('/logout')
 def logout():
-    if userClass.logout():
+    if app.userClass.logout():
         flash('You are logged out!', 'success')
     return redirect(url_for('login'))
 
@@ -40,13 +38,13 @@ def login():
         if not username or not password:
             error = True
         else:
-            user_data = userClass.login(username.lower().strip(), password)
+            user_data = app.userClass.login(username.lower().strip(), password)
             if user_data['error']:
                 error = True
                 error_type = 'login'
                 flash(user_data['error'], 'error')
             else:
-                userClass.start_session(user_data['data'])
+                app.userClass.start_session(user_data['data'])
                 flash('You are logged in!', 'success')
                 return redirect(url_for('posts'))
     else:
@@ -59,21 +57,59 @@ def login():
                            error_type=error_type)
 
 
+@main.route('/search', methods=['GET', 'POST'])
+def search():
+    if request.method != 'POST':
+        return redirect(url_for('index'))
+
+    query = request.form.get('query', None)
+    if query:
+        return redirect(url_for('search_results', query=query))
+    else:
+        return redirect(url_for('index'))
+
+@main.before_request
+def csrf_protect():
+    if request.method == "POST":
+        token = session.pop('_csrf_token', None)
+        if not token or token != request.form.get('_csrf_token'):
+            abort(400)
+
+
+@main.before_request
+def is_installed():
+    current_app.config = app.settingsClass.get_config()
+    current_app.jinja_env.globals['meta_description'] = current_app.config['BLOG_DESCRIPTION']
+    if not session.get('installed', None):
+        if url_for('static', filename='') not in request.path and request.path != url_for('install'):
+            if not current_app.settingsClass.is_installed():
+                return redirect(url_for('install'))
+
+
+@main.before_request
+def set_globals():
+    current_app.jinja_env.globals['csrf_token'] = generate_csrf_token
+    current_app.jinja_env.globals['recent_posts'] = app.postClass.get_posts(10, 0)['data']
+    current_app.jinja_env.globals['tags'] = app.postClass.get_tags()['data']
+
+
+
+
 @main.route('/users')
 @login_required()
 def users_list():
-    users = userClass.get_users()
+    users = app.userClass.get_users()
     return render_template('users.html', users=users['data'], meta_title='Users')
 
 
 @main.route('/posts_list', defaults={'page': 1})
-@app.route('/posts_list/page-<int:page>')
+@main.route('/posts_list/page-<int:page>')
 @login_required()
 def posts(page):
     session.pop('post-preview', None)
     skip = (page - 1) * int(current_app.config['PER_PAGE'])
-    posts = postClass.get_posts(int(current_app.config['PER_PAGE']), skip)
-    count = postClass.get_total_count()
+    posts = app.postClass.get_posts(int(current_app.config['PER_PAGE']), skip)
+    count = app.postClass.get_total_count()
     pag = Pagination(page, current_app.config['PER_PAGE'], count)
 
     if not posts['data']:
@@ -107,7 +143,7 @@ def new_post():
                          'tags': tags_array,
                          'author': session['user']['username']}
 
-            post = postClass.validate_post_data(post_data)
+            post = app.postClass.validate_post_data(post_data)
             if request.form.get('post-preview') == '1':
                 session['post-preview'] = post
                 session[
@@ -122,7 +158,7 @@ def new_post():
                 session.pop('post-preview', None)
 
                 if request.form.get('post-id'):
-                    response = postClass.edit_post(
+                    response = app.postClass.edit_post(
                         request.form['post-id'], post)
                     if not response['error']:
                         flash('Post updated!', 'success')
@@ -133,7 +169,7 @@ def new_post():
 
                     post['view_count'] = 1
 
-                    response = postClass.create_new_post(post)
+                    response = app.postClass.create_new_post(post)
                     if response['error']:
                         error = True
                         error_type = 'post'
@@ -167,7 +203,7 @@ def blog_settings():
                 error = True
                 break
         if not error:
-            update_result = settingsClass.update_settings(blog_data)
+            update_result = app.settingsClass.update_settings(blog_data)
             if update_result['error']:
                 flash(update_result['error'], 'error')
             else:
