@@ -14,6 +14,7 @@ from app.main.user import User
 from app.main.settings import Settings
 from app.main.post import Post
 from app.share.media import Media
+import app as app_model
 
 bootstrap = Bootstrap()
 manager = Manager()
@@ -26,6 +27,7 @@ mediaClass = Media()
 # md = Markdown()
 # 新建一个set用于设置文件类型、过滤等
 set_mypic = UploadSet('mypic')  # mypic
+
 
 def create_app():
     app = Flask(__name__)
@@ -44,6 +46,13 @@ def create_app():
     settingsClass.init(app.config)
     mediaClass.init(app.config)
 
+    # 初始化一些 jinjia2 模板里面的自定义函数
+    app.add_template_global(generate_csrf_token, 'csrf_token')
+    app.add_template_global(app_model.postClass.get_posts(10, 0)['data'], 'recent_posts')
+    app.add_template_global(app_model.postClass.get_tags()['data'], 'tags')
+    app.add_template_global(url_for_other_page, 'url_for_other_page')
+    app.add_template_global(app.config['BLOG_DESCRIPTION'], 'meta_description')
+
     # mypic 的存储位置,
     # UPLOADED_xxxxx_DEST, xxxxx部分就是定义的set的名称, mypi, 下同
     app.config['UPLOADED_MYPIC_DEST'] = './media/img/'
@@ -56,5 +65,12 @@ def create_app():
 
     from .mg import mg as mg_bl
     app.register_blueprint(mg_bl, url_prefix='/mg')
+
+    if not app.config['DEBUG']:
+        import logging
+        from logging import FileHandler
+        file_handler = FileHandler(app.config['LOG_FILE'])
+        file_handler.setLevel(logging.WARNING)
+        app.logger.addHandler(file_handler)
 
     return app

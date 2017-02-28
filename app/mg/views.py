@@ -1,6 +1,6 @@
 # coding:utf-8
-from flask import render_template
-from flask import request
+from flask import render_template, redirect, url_for
+from flask import request, flash, session
 from config import UPDATE_INFO
 from . import mg as mg_bp
 from .model import UploadForm
@@ -42,3 +42,58 @@ def get_img_info():
     # app.logger.error(rst_img_list)
     return render_template('mg/img_info.html', rst_img_list=rst_img_list)
 
+@mg_bp.route('/add_user')
+@login_required()
+def add_user():
+    gravatar_url = app.userClass.get_gravatar_link()
+    return render_template('add_user.html', gravatar_url=gravatar_url, meta_title='Add user')
+
+
+@mg_bp.route('/edit_user?id=<id>')
+@login_required()
+def edit_user(id):
+    user = app.userClass.get_user(id)
+    return render_template('edit_user.html', user=user['data'], meta_title='Edit user')
+
+
+@mg_bp.route('/delete_user?id=<id>')
+@login_required()
+def delete_user(id):
+    if id != session['user']['username']:
+        user = app.userClass.delete_user(id)
+        if user['error']:
+            flash(user['error'], 'error')
+        else:
+            flash('User deleted!', 'success')
+    return redirect(url_for('users_list'))
+
+
+@mg_bp.route('/save_user', methods=['POST'])
+@login_required()
+def save_user():
+    post_data = {
+        '_id': request.form.get('user-id', None).lower().strip(),
+        'email': request.form.get('user-email', None),
+        'old_pass': request.form.get('user-old-password', None),
+        'new_pass': request.form.get('user-new-password', None),
+        'new_pass_again': request.form.get('user-new-password-again', None),
+        'update': request.form.get('user-update', False)
+    }
+    if not post_data['email'] or not post_data['_id']:
+        flash('Username and Email are required..', 'error')
+        if post_data['update']:
+                return redirect(url_for('edit_user', id=post_data['_id']))
+        else:
+            return redirect(url_for('add_user'))
+    else:
+        user = app.userClass.save_user(post_data)
+        if user['error']:
+            flash(user['error'], 'error')
+            if post_data['update']:
+                return redirect(url_for('edit_user', id=post_data['_id']))
+            else:
+                return redirect(url_for('add_user'))
+        else:
+            message = 'User updated!' if post_data['update'] else 'User added!'
+            flash(message, 'success')
+    return redirect(url_for('edit_user', id=post_data['_id']))
