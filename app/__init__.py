@@ -3,7 +3,7 @@ from flask import Flask
 from flask.ext.moment import Moment
 from flask_bootstrap import Bootstrap
 from flask_script import Manager
-from flask_uploads import UploadSet, IMAGES
+from flask_uploads import UploadSet, IMAGES, configure_uploads
 from flaskext.markdown import Markdown
 from app.share.helper_functions import *
 from mdx_code_multiline import MultilineCodeExtension
@@ -16,6 +16,7 @@ from app.main.post import Post
 from app.share.media import Media
 import app as app_model
 from app.main.views import format_datetime_filter
+import os
 
 bootstrap = Bootstrap()
 manager = Manager()
@@ -57,10 +58,11 @@ def create_app():
 
     # mypic 的存储位置,
     # UPLOADED_xxxxx_DEST, xxxxx部分就是定义的set的名称, mypi, 下同
-    app.config['UPLOADED_MYPIC_DEST'] = './media/img/'
+    app.config['UPLOADED_MYPIC_DEST'] = os.path.join(os.getcwd(), '/media/img/')
 
     # mypic 允许存储的类型, IMAGES为预设的 tuple('jpg jpe jpeg png gif svg bmp'.split())
     app.config['UPLOADED_MYPIC_ALLOW'] = IMAGES
+    configure_uploads(app, set_mypic)
 
     from .main import main as main_bp
     # 额 这后面的 url_prefix='/' 不要加 默认就是这个 加了 反而解析不了
