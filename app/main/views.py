@@ -1,3 +1,4 @@
+#coding:utf-8
 from flask import request, url_for, render_template, flash, redirect, session, abort, current_app
 from post import Post
 from settings import Settings
@@ -26,7 +27,7 @@ def index(page):
 def logout():
     if app.userClass.logout():
         flash('You are logged out!', 'success')
-    return redirect(url_for('login'))
+    return redirect(url_for('.login'))
 
 
 @main.route('/login', methods=['GET', 'POST'])
@@ -47,10 +48,10 @@ def login():
             else:
                 app.userClass.start_session(user_data['data'])
                 flash('You are logged in!', 'success')
-                return redirect(url_for('posts'))
+                return redirect(url_for('.posts'))
     else:
         if session.get('user'):
-            return redirect(url_for('posts'))
+            return redirect(url_for('.posts'))
 
     return render_template('login.html',
                            meta_title='Login',
@@ -61,13 +62,13 @@ def login():
 @main.route('/search', methods=['GET', 'POST'])
 def search():
     if request.method != 'POST':
-        return redirect(url_for('index'))
+        return redirect(url_for('.index'))
 
     query = request.form.get('query', None)
     if query:
-        return redirect(url_for('search_results', query=query))
+        return redirect(url_for('.search_results', query=query))
     else:
-        return redirect(url_for('index'))
+        return redirect(url_for('.index'))
 
 
 @main.before_request
@@ -83,9 +84,9 @@ def is_installed():
     current_app.config = app.settingsClass.get_config()
     current_app.jinja_env.globals['meta_description'] = current_app.config['BLOG_DESCRIPTION']
     if not session.get('installed', None):
-        if url_for('static', filename='') not in request.path and request.path != url_for('install'):
-            if not current_app.settingsClass.is_installed():
-                return redirect(url_for('install'))
+        if url_for('static', filename='') not in request.path and request.path != url_for('main.install'):
+            if not app.settingsClass.is_installed():
+                return redirect(url_for('main.install'))
 
 
 @main.before_request
@@ -124,7 +125,6 @@ def page_not_found(error):
     return render_template('404.html', meta_title='404'), 404
 
 
-@main.template_filter('formatdate')
 def format_datetime_filter(input_value, format_="%a, %d %b %Y"):
     return input_value.strftime(format_)
 
@@ -161,10 +161,10 @@ def new_post():
                     'post-preview']['action'] = 'edit' if request.form.get('post-id') else 'add'
                 if request.form.get('post-id'):
                     session[
-                        'post-preview']['redirect'] = url_for('post_edit', id=request.form.get('post-id'))
+                        'post-preview']['redirect'] = url_for('.post_edit', id=request.form.get('post-id'))
                 else:
-                    session['post-preview']['redirect'] = url_for('new_post')
-                return redirect(url_for('post_preview'))
+                    session['post-preview']['redirect'] = url_for('.new_post')
+                return redirect(url_for('.post_preview'))
             else:
                 session.pop('post-preview', None)
 
@@ -175,7 +175,7 @@ def new_post():
                         flash('Post updated!', 'success')
                     else:
                         flash(response['error'], 'error')
-                    return redirect(url_for('posts'))
+                    return redirect(url_for('.posts'))
                 else:
 
                     post['view_count'] = 1
@@ -199,7 +199,7 @@ def new_post():
 @main.route('/install', methods=['GET', 'POST'])
 def install():
     if session.get('installed', None):
-        return redirect(url_for('index'))
+        return redirect(url_for('.index'))
 
     error = False
     error_type = 'validate'
@@ -249,10 +249,10 @@ def install():
                 else:
                     app.userClass.start_session(user_login['data'])
                     flash('You are logged in!', 'success')
-                    return redirect(url_for('posts'))
+                    return redirect(url_for('.posts'))
     else:
         if app.settingsClass.is_installed():
-            return redirect(url_for('index'))
+            return redirect(url_for('.index'))
 
     return render_template('install.html',
                            default_settings=current_app.config,
@@ -296,7 +296,7 @@ def blog_settings():
                 flash(update_result['error'], 'error')
             else:
                 flash('Settings updated!', 'success')
-                return redirect(url_for('blog_settings'))
+                return redirect(url_for('.blog_settings'))
 
     return render_template('settings.html',
                            default_settings=current_app.config,
@@ -374,7 +374,7 @@ def post_edit(id):
     post = app.postClass.get_post_by_id(id)
     if post['error']:
         flash(post['error'], 'error')
-        return redirect(url_for('posts'))
+        return redirect(url_for('.posts'))
 
     if session.get('post-preview') and session['post-preview']['action'] == 'add':
         session.pop('post-preview', None)
@@ -397,7 +397,7 @@ def post_del(id):
     else:
         flash('Need to be at least one post..', 'error')
 
-    return redirect(url_for('posts'))
+    return redirect(url_for('.posts'))
 
 
 @main.route('/recent_feed')
@@ -412,6 +412,6 @@ def recent_feed():
                  content_type='html',
                  author=post['author'],
                  url=make_external(
-                     url_for('single_post', permalink=post['permalink'])),
+                     url_for('.single_post', permalink=post['permalink'])),
                  updated=post['date'])
     return feed.get_response()

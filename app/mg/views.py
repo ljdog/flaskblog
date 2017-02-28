@@ -46,14 +46,14 @@ def get_img_info():
 @login_required()
 def add_user():
     gravatar_url = app.userClass.get_gravatar_link()
-    return render_template('add_user.html', gravatar_url=gravatar_url, meta_title='Add user')
+    return render_template('mg/add_user.html', gravatar_url=gravatar_url, meta_title='Add user')
 
 
 @mg_bp.route('/edit_user?id=<id>')
 @login_required()
 def edit_user(id):
     user = app.userClass.get_user(id)
-    return render_template('edit_user.html', user=user['data'], meta_title='Edit user')
+    return render_template('mg/edit_user.html', user=user['data'], meta_title='Edit user')
 
 
 @mg_bp.route('/delete_user?id=<id>')
@@ -65,7 +65,7 @@ def delete_user(id):
             flash(user['error'], 'error')
         else:
             flash('User deleted!', 'success')
-    return redirect(url_for('users_list'))
+    return redirect(url_for('.users_list'))
 
 
 @mg_bp.route('/save_user', methods=['POST'])
@@ -82,18 +82,18 @@ def save_user():
     if not post_data['email'] or not post_data['_id']:
         flash('Username and Email are required..', 'error')
         if post_data['update']:
-                return redirect(url_for('edit_user', id=post_data['_id']))
+                return redirect(url_for('.edit_user', id=post_data['_id']))
         else:
-            return redirect(url_for('add_user'))
+            return redirect(url_for('.add_user'))
     else:
         user = app.userClass.save_user(post_data)
         if user['error']:
             flash(user['error'], 'error')
             if post_data['update']:
-                return redirect(url_for('edit_user', id=post_data['_id']))
+                return redirect(url_for('.edit_user', id=post_data['_id']))
             else:
-                return redirect(url_for('add_user'))
+                return redirect(url_for('.add_user'))
         else:
             message = 'User updated!' if post_data['update'] else 'User added!'
             flash(message, 'success')
-    return redirect(url_for('edit_user', id=post_data['_id']))
+    return redirect(url_for('.edit_user', id=post_data['_id']))

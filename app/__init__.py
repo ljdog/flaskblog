@@ -15,6 +15,7 @@ from app.main.settings import Settings
 from app.main.post import Post
 from app.share.media import Media
 import app as app_model
+from app.main.views import format_datetime_filter
 
 bootstrap = Bootstrap()
 manager = Manager()
@@ -52,6 +53,7 @@ def create_app():
     app.add_template_global(app_model.postClass.get_tags()['data'], 'tags')
     app.add_template_global(url_for_other_page, 'url_for_other_page')
     app.add_template_global(app.config['BLOG_DESCRIPTION'], 'meta_description')
+    app.add_template_filter(format_datetime_filter, 'formatdate')
 
     # mypic 的存储位置,
     # UPLOADED_xxxxx_DEST, xxxxx部分就是定义的set的名称, mypi, 下同
@@ -61,7 +63,8 @@ def create_app():
     app.config['UPLOADED_MYPIC_ALLOW'] = IMAGES
 
     from .main import main as main_bp
-    app.register_blueprint(main_bp, url_prefix='/')
+    # 额 这后面的 url_prefix='/' 不要加 默认就是这个 加了 反而解析不了
+    app.register_blueprint(main_bp)
 
     from .mg import mg as mg_bl
     app.register_blueprint(mg_bl, url_prefix='/mg')
