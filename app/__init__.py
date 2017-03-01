@@ -58,7 +58,7 @@ def create_app():
 
     # mypic 的存储位置,
     # UPLOADED_xxxxx_DEST, xxxxx部分就是定义的set的名称, mypi, 下同
-    app.config['UPLOADED_MYPIC_DEST'] = os.path.join(os.getcwd(), '/media/img/')
+    app.config['UPLOADED_MYPIC_DEST'] = os.getcwd() + '/media/img'
 
     # mypic 允许存储的类型, IMAGES为预设的 tuple('jpg jpe jpeg png gif svg bmp'.split())
     app.config['UPLOADED_MYPIC_ALLOW'] = IMAGES
