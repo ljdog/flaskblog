@@ -269,7 +269,7 @@ def posts_by_tag(tag, page):
     count = app.postClass.get_total_count(tag=tag)
     if not posts['data']:
         abort(404)
-    pag = app.pagination.Pagination(page, current_app.config['PER_PAGE'], count)
+    pag = Pagination(page, current_app.config['PER_PAGE'], count)
     return render_template('index.html', posts=posts['data'], pagination=pag, meta_title='Posts by tag: ' + tag)
 
 
@@ -347,7 +347,7 @@ def single_post(permalink):
 @main.route('/q/<query>', defaults={'page': 1})
 @main.route('/q/<query>/page-<int:page>')
 def search_results(page, query):
-    skip = (page - 1) * int(app.config['PER_PAGE'])
+    skip = (page - 1) * int(current_app.config['PER_PAGE'])
     if query:
         posts = app.postClass.get_posts(
             int(current_app.config['PER_PAGE']), skip, search=query)
@@ -355,7 +355,7 @@ def search_results(page, query):
         posts = []
         posts['data'] = []
     count = app.postClass.get_total_count(search=query)
-    pag = app.pagination.Pagination(page, app.config['PER_PAGE'], count)
+    pag = Pagination(page, current_app.config['PER_PAGE'], count)
     return render_template('index.html', posts=posts['data'], pagination=pag, meta_title='Search results')
 
 

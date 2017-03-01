@@ -18,7 +18,7 @@ def index():
 
 
 @mg_bp.route('/upload_img', methods=('GET', 'POST'))
-# @login_required()
+@login_required()
 def upload_img():
     from datetime import datetime
     import time
