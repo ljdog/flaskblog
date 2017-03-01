@@ -1,0 +1,34 @@
+<div class="navbar navbar-default navbar-fixed-top">
+	<div class="navbar-header">
+		<ul class="nav navbar-nav">
+			<li><a href="{{ url_for('main.index') }}" class="navbar-brand">Home</a></li>
+		{% if session.user %}
+			<li><a href="{{ url_for('main.logout') }}">Logout</a></li>
+		{% else %}
+			<li><a href="{{ url_for('main.login') }}">Login</a></li>
+		{% endif %}
+		</ul>
+
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>
+	</div>
+	<div class="navbar-collapse collapse" id="navbar-main">
+		<ul class="nav navbar-nav">
+{#			<li><a href="{{ url_for('recent_feed') }}" class="icon-rss"></a></li>#}
+		{% if session.user %}
+			<li><a href="{{ url_for('main.users_list') }}">Users</a></li>
+			<li><a href="{{ url_for('main.posts') }}">Posts</a></li>
+			<li><a href="{{ url_for('main.new_post') }}">New post</a></li>
+			<li><a href="{{ url_for('main.blog_settings') }}">Settings</a></li>
+            <li><a href="{{ url_for('main.manage_trifles') }}">mg</a></li>
+		{% endif %}
+		</ul>
+		<form class="navbar-form navbar-right search-form" method="post" action="{{ url_for('main.search') }}">
+            <input type="text" name="query" class="form-control col-lg-8" placeholder="Search">
+			<input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+		</form>
+	</div>
+</div>

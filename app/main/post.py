@@ -1,16 +1,23 @@
 # coding:utf-8
-import datetime
 import cgi
+import datetime
+
 from bson.objectid import ObjectId
-from helper_functions import *
+
+from app.share.helper_functions import *
 
 
 class Post:
 
-    def __init__(self, default_config):
-        self.collection = default_config['POSTS_COLLECTION']
+    def __init__(self, default_config=None):
+        if default_config:
+            self.debug_mode = default_config['DEBUG']
+            self.collection = default_config['POSTS_COLLECTION']
         self.response = {'error': None, 'data': None}
+
+    def init(self,default_config):
         self.debug_mode = default_config['DEBUG']
+        self.collection = default_config['POSTS_COLLECTION']
 
     def get_posts(self, limit, skip, tag=None, search=None):
         self.response['error'] = None

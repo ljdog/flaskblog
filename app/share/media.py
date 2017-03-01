@@ -7,7 +7,11 @@ class Media:
     主要用来管理上传的资源
     """
 
-    def __init__(self, default_config):
+    def __init__(self, default_config=None):
+        if default_config:
+            self.collection = default_config['UPDATE_INFO']
+
+    def init(self,default_config):
         self.collection = default_config['UPDATE_INFO']
 
     def get_all(self):
