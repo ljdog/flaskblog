@@ -137,7 +137,7 @@ def new_post():
     if request.method == 'POST':
         post_title = request.form.get('post-title').strip()
         post_full = request.form.get('post-full')
-        post_keywords = request.form.get('post_keywords') or app.settingsClass.get_config().get('BLOG_DESCRIPTION')
+        post_keywords = request.form.get('post_keywords')
 
         if not post_title or not post_full:
             error = True
@@ -146,7 +146,10 @@ def new_post():
             tags_array = extract_tags(tags)
 
             post_short = request.form.get('post-short')
-            post_keywords = ','.join(post_keywords.split(' '))
+            if post_keywords.find(app.settingsClass.get_config().get('BLOG_DESCRIPTION')) < 0:
+                post_keywords = app.settingsClass.get_config().get('BLOG_DESCRIPTION') + ',' + ','.join(post_keywords.split(' '))
+            else:
+                post_keywords = ','.join(post_keywords.split(' '))
             if not post_short:
                 post_short = post_full[:200]
 
@@ -332,6 +335,7 @@ def single_post(permalink):
     current_app.logger.warn(b)
     current_app.logger.warn(u"数据库中的内容")
     current_app.logger.warn(p)
+    current_app.logger.warn(post['data'].get('post_keywords'))
 
     current_app.logger.warn(u"markdown############")
 
@@ -342,8 +346,13 @@ def single_post(permalink):
 
     mk_body = Markup(mk_body)
     preview = Markup(preview)
+    if not post['data'].get('post_keywords'):
+        tt = post['data'].get('title').replace('  ', ' ').replace(' ', ',')
+        meta_keywords = current_app.config['BLOG_DESCRIPTION'] + ',' + tt
+    else:
+        meta_keywords = post['data'].get('post_keywords')
     return render_template('single_post.html', post=post['data'],
-                           preview=preview, mk_body=mk_body,
+                           preview=preview, mk_body=mk_body, meta_keywords=meta_keywords,
                            meta_title=current_app.config['BLOG_TITLE'] + '::' + post['data']['title'])
 
 
@@ -384,6 +393,7 @@ def post_edit(id):
     return render_template('edit_post.html',
                            meta_title='Edit post::' + post['data']['title'],
                            post=post['data'],
+                           post_keywords=post['data'].get('post_keywords') or app.settingsClass.get_config().get('BLOG_DESCRIPTION'),
                            error=False,
                            error_type=False)
 
