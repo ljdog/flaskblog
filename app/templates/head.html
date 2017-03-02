@@ -2,6 +2,7 @@
     <title>{%- if meta_title -%}{{ meta_title }}{%- else -%}FlaskBlog{%- endif -%}</title>
     <meta name="baidu-site-verification" content="U9tS2FBkql" />
 	<meta name="description" content="{{ meta_description }}">
+    {%-block add_meta -%}{%- endblock -%}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
 {#	<link href="{{ url_for('recent_feed') }}" rel="alternate" title="Recent Changes" type="application/atom+xml">#}

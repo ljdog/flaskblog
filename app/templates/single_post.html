@@ -1,6 +1,9 @@
 {%- extends 'index.html' -%}
 {%- block head -%}
     {%- include 'head.html' -%}
+    {% block add_meta  %}
+    <meta name="keywords" content="{{ post.post_keywords }}">
+    {%- endblock- %}
     {%- block additional_css -%}
         <link href="{{ url_for('static', filename='css/lightbox.css') }}" rel="stylesheet" media="screen">
         <link href="{{ url_for('static', filename='css/github-markdown.css') }}" rel="stylesheet" media="screen">

@@ -137,6 +137,7 @@ def new_post():
     if request.method == 'POST':
         post_title = request.form.get('post-title').strip()
         post_full = request.form.get('post-full')
+        post_keywords = request.form.get('post_keywords') or app.settingsClass.get_config().get('BLOG_DESCRIPTION')
 
         if not post_title or not post_full:
             error = True
@@ -145,11 +146,13 @@ def new_post():
             tags_array = extract_tags(tags)
 
             post_short = request.form.get('post-short')
+            post_keywords = ','.join(post_keywords.split(' '))
             if not post_short:
                 post_short = post_full[:200]
 
             post_data = {'title': post_title,
                          'preview': post_short,
+                         'post_keywords': post_keywords,
                          'body': post_full,
                          'tags': tags_array,
                          'author': session['user']['username']}
