@@ -1,4 +1,4 @@
-#coding:utf-8
+# coding:utf-8
 from flask import request, url_for, render_template, flash, redirect, session, abort, current_app
 from post import Post
 from settings import Settings
@@ -20,7 +20,8 @@ def index(page):
     posts = app.postClass.get_posts(int(current_app.config['PER_PAGE']), skip)
     count = app.postClass.get_total_count()
     pag = Pagination(page, current_app.config['PER_PAGE'], count)
-    return render_template('index.html', posts=posts['data'], pagination=pag, meta_title=current_app.config['BLOG_TITLE'])
+    return render_template('index.html', posts=posts['data'], pagination=pag,
+                           meta_title=current_app.config['BLOG_TITLE'])
 
 
 @main.route('/logout')
@@ -147,7 +148,8 @@ def new_post():
 
             post_short = request.form.get('post-short')
             if post_keywords.find(app.settingsClass.get_config().get('BLOG_DESCRIPTION')) < 0:
-                post_keywords = app.settingsClass.get_config().get('BLOG_DESCRIPTION') + ',' + ','.join(post_keywords.split(' '))
+                post_keywords = app.settingsClass.get_config().get('BLOG_DESCRIPTION') + ',' + ','.join(
+                    post_keywords.split(' '))
             else:
                 post_keywords = ','.join(post_keywords.split(' '))
             if not post_short:
@@ -393,7 +395,8 @@ def post_edit(id):
     return render_template('edit_post.html',
                            meta_title='Edit post::' + post['data']['title'],
                            post=post['data'],
-                           post_keywords=post['data'].get('post_keywords') or app.settingsClass.get_config().get('BLOG_DESCRIPTION'),
+                           post_keywords=post['data'].get('post_keywords') or app.settingsClass.get_config().get(
+                               'BLOG_DESCRIPTION'),
                            error=False,
                            error_type=False)
 
