@@ -15,9 +15,9 @@
 				<div class="col-lg-9">
 					<div class="page-header">
 						<h2>{{ post['title'] | safe }}</h2>
-						<p><span class="icon-time">&nbsp;</span><i>Posted on {{ moment( post['date']).format('YYYYMMDD HH:mm') }} by {{ post['author'] }}</i>
+						<p><span class="icon-time">&nbsp;</span><i>Posted on {{ post['date']|formatdate }} by {{ post['author'] }}</i>
                              {% if post.get('update') %}
-                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="icon-refresh">&nbsp;</span><i>Update:{{  moment( post.get('update')).format('YYYYMMDD HH:mm:ss') }}</i>
+                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="icon-refresh">&nbsp;</span><i>Update:{{ post.get('update')|formatdate }}</i>
                              {% endif %}
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="icon-fire">&nbsp;{{post.get('view_count')}}</span>
                         </p>

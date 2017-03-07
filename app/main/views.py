@@ -126,7 +126,7 @@ def page_not_found(error):
     return render_template('404.html', meta_title='404'), 404
 
 
-def format_datetime_filter(input_value, format_="%a, %d %b %Y"):
+def format_datetime_filter(input_value, format_="%Y%m%d %H:%M"):
     return input_value.strftime(format_)
 
 

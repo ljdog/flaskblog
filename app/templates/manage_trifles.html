@@ -24,7 +24,6 @@
 		{%- block scripts -%}
 			<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 			<script src="http://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-			{{ moment.include_moment() }}
             {%- block additional_js -%}{%- endblock -%}
 			<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 		{%- endblock -%}

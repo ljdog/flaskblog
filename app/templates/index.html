@@ -13,9 +13,9 @@
 									<div class="col-lg-8">
 										<div class="page-header">
 											<h2><a href="{{ url_for('main.single_post', permalink=post['permalink']) }}">{{ post['title'] | safe }}</a></h2>
-											<p><span class="icon-time">&nbsp;</span><i>Posted on {{ moment( post['date']).format('YYYYMMDD HH:mm') }} by {{ post['author'] }}</i>
+											<p><span class="icon-time">&nbsp;</span><i>Posted on {{ post['date']|formatdate }} by {{ post['author'] }}</i>
                                                 {% if post.get('update') %}
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="icon-refresh">&nbsp;</span><i>Update:{{  moment( post.get('update')).format('YYYYMMDD HH:mm:ss') }}</i>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="icon-refresh">&nbsp;</span><i>Update:{{ post.get('update')|formatdate }}</i>
                                                 {% endif %}
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="icon-fire">&nbsp;{{post.get('view_count')}}</span>
                                             </p>
@@ -77,7 +77,6 @@
 		{%- block scripts -%}
 			<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 			<script src="http://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-			{{ moment.include_moment() }}
             {%- block additional_js -%}{%- endblock -%}
 			<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 		{%- endblock -%}

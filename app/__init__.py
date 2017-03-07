@@ -34,8 +34,8 @@ set_mypic = UploadSet('mypic')  # mypic
 def create_app():
     app = Flask(__name__)
 
-    _moment.include_jquery(version='2.17.1', local_js='http://cdn.staticfile.org/moment.js/2.17.1/moment.min.js')
-    moment = Moment(app)
+    # _moment.include_jquery(version='2.17.1', local_js='http://cdn.staticfile.org/moment.js/2.17.1/moment.min.js')
+    # moment = Moment(app)
 
 
     md = Markdown(app)
