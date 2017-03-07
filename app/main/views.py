@@ -149,11 +149,11 @@ def new_post():
             tags_array = extract_tags(tags)
 
             post_short = request.form.get('post-short')
-            if post_keywords.find(app.settingsClass.get_config().get('BLOG_DESCRIPTION')) < 0:
+            if post_keywords.find(app.settingsClass.get_config().get('BLOG_DESCRIPTION')) == -1:
                 post_keywords = app.settingsClass.get_config().get('BLOG_DESCRIPTION') + ',' + ','.join(
                     post_keywords.split(' '))
             else:
-                post_keywords = ','.join(post_keywords.split(' '))
+                post_keywords = ','.join(set(post_keywords.split(' ')))
             if not post_short:
                 post_short = post_full[:200]
 
