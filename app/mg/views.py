@@ -25,17 +25,17 @@ def upload_img():
     form = UploadForm()
     url = None
     # app.logger.warn(u"进入函数")
-    print 'jin'
+    # print 'jin'
     url_list = []
     if form.validate_on_submit():
         # 因为每个图片要写上 图片说明 所有一次只能上传一张图片
         # for filename in request.files.getlist('upload'):
         # filename = form.upload.data.filename
-        print u"图片开始保存"
+        # print u"图片开始保存"
         # return render_template('mg/upload_img.html', form=form, url_list=url_list)
         str_folder = str(datetime.today())[:7]
         filename = form.upload.data.filename[:-4] + "_" + str(time.time())[:11]
-        print u"图片开始保存"
+        # print u"图片开始保存"
 
         url_list.append(set_mypic.url(set_mypic.save(form.upload.data, folder=str_folder, name=filename)))
 

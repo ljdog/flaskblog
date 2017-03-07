@@ -78,7 +78,8 @@ def create_app():
         from logging import FileHandler
         file_handler = FileHandler(app.config['LOG_FILE'])
         file_handler.setLevel(logging.WARNING)
-        formatstr = '[%(levelname)s][%(asctime)s][%(process)d:%(thread)d][%(filename)s:%(lineno)d] \r\n %(message)s\r\n'
+        out_line = '\r\n' + '--' * 50 + '\r\n'
+        formatstr = out_line + '[%(levelname)s][%(asctime)s][%(process)d:%(thread)d][%(filename)s:%(lineno)d] \r\n %(message)s\r\n'
         formatter = logging.Formatter(formatstr)
         file_handler.setFormatter(formatter)
         app.logger.addHandler(file_handler)
