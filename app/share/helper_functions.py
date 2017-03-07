@@ -57,7 +57,8 @@ def single_keyword(str_key):
     if static_str not in str_key:
         str_key.insert(0, static_str)
     str_key = set(str_key)
-    str_key = ','.join(str_key.remove('')).replace('#', ' ')
+    str_key.remove('')
+    str_key = ','.join(str_key).replace('#', ' ')
     return str_key
 
 
