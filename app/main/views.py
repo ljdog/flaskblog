@@ -11,6 +11,7 @@ from app.share.helper_functions import generate_csrf_token
 from app.share.helper_functions import login_required, extract_tags
 import cgi
 import mistune
+import config
 
 
 @main.route('/', defaults={'page': 1})
@@ -20,7 +21,8 @@ def index(page):
     posts = app.postClass.get_posts(int(current_app.config['PER_PAGE']), skip)
     count = app.postClass.get_total_count()
     pag = Pagination(page, current_app.config['PER_PAGE'], count)
-    return render_template('index.html', posts=posts['data'], pagination=pag,
+    include_bd = config.INCLUDE_BD
+    return render_template('index.html', posts=posts['data'], pagination=pag, include_bd=include_bd,
                            meta_title=current_app.config['BLOG_TITLE'])
 
 

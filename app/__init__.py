@@ -37,7 +37,6 @@ def create_app():
     # _moment.include_jquery(version='2.17.1', local_js='http://cdn.staticfile.org/moment.js/2.17.1/moment.min.js')
     # moment = Moment(app)
 
-
     md = Markdown(app)
     md.register_extension(GitHubGistExtension)
     md.register_extension(StrikeExtension)

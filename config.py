@@ -39,3 +39,13 @@ else:
 LOG_FILE = "app.log"
 
 DEBUG = False  # set it to False on production
+INCLUDE_BD = True
+
+# 再从环境中导入一下看看有没有debug文件
+# --------- 重要重要重要, 永远放到最后 ----------------
+
+try:
+    from debug_config import *
+except:
+    pass
+# --------- 仅作调试，并且不想要提交到服务器来用 ------

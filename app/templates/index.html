@@ -80,6 +80,8 @@
             {%- block additional_js -%}{%- endblock -%}
 			<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 		{%- endblock -%}
-	    {%- include 'baidu_zz.html' -%}
+        {% if include_bd %}
+            {%- include 'baidu_zz.html' -%}
+        {% endif %}
     </body>
 </html>
