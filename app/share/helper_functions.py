@@ -56,8 +56,8 @@ def single_keyword(str_key):
     static_str = app.settingsClass.get_config().get('BLOG_DESCRIPTION')
     if static_str not in str_key:
         str_key.insert(0, static_str)
-
-    str_key = ','.join(set(str_key).remove('')).replace('#',' ')
+    str_key = set(str_key)
+    str_key = ','.join(str_key.remove('')).replace('#', ' ')
     return str_key
 
 
