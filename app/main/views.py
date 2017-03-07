@@ -356,7 +356,7 @@ def single_post(permalink):
     else:
         meta_keywords = post['data'].get('post_keywords')
         meta_keywords = meta_keywords.replace(',,', ',')
-    return render_template('single_post.html', post=post['data'],
+    return render_template('single_post.html', post=post['data'], include_bd=config.INCLUDE_BD,
                            preview=preview, mk_body=mk_body, meta_keywords=meta_keywords,
                            meta_title=current_app.config['BLOG_TITLE'] + '::' + post['data']['title'])
 

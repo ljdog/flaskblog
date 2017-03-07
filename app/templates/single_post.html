@@ -46,4 +46,8 @@
 	{%- endif -%}
 	{%- include 'sidebar.html' -%}
 {%- endblock -%}
-{%- block additional_js -%}<script src="{{ url_for('static', filename='js/lightbox-2.6.min.js') }}"></script>{%- endblock -%}
+{%- block additional_js -%}<script src="{{ url_for('static', filename='js/lightbox-2.6.min.js') }}"></script>
+{% if include_bd %}
+    {%- include 'baidu_zz' -%}
+{% endif %}
+{%- endblock -%}
