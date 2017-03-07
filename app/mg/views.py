@@ -39,7 +39,7 @@ def upload_img():
 
         url_list.append(set_mypic.url(set_mypic.save(form.upload.data, folder=str_folder, name=filename)))
 
-        print u"图片已经保存"
+        # print u"图片已经保存"
         app.mediaClass.set_img_info(url_list[0], filename[:-1], request.form.get('explain'))
 
     return render_template('mg/upload_img.html', form=form, url_list=url_list)
