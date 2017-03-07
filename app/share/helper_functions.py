@@ -4,7 +4,7 @@ import random
 from urlparse import urljoin
 from flask import request, url_for, session, flash, redirect
 from functools import wraps
-
+import app
 
 def url_for_other_page(page):
     args = request.view_args.copy()
@@ -49,3 +49,17 @@ def login_required():
             return f(*args, **kwargs)
         return wrapped
     return wrapper
+
+
+def single_keyword(str_key):
+    str_key = str_key.replace('  ', ' ').replace(',,', ',').split(',')
+    static_str = app.settingsClass.get_config().get('BLOG_DESCRIPTION')
+    if str_key.find(static_str) == -1:
+        str_key.insert(0, static_str)
+
+    str_key = ','.join(set(str_key).remove('')).replace('#',' ')
+    return str_key
+
+
+
+
