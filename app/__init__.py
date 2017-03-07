@@ -1,6 +1,6 @@
 # coding:utf-8
 from flask import Flask
-from flask.ext.moment import Moment
+from flask.ext.moment import Moment,_moment
 from flask_bootstrap import Bootstrap
 from flask_script import Manager
 from flask_uploads import UploadSet, IMAGES, configure_uploads
@@ -33,7 +33,10 @@ set_mypic = UploadSet('mypic')  # mypic
 
 def create_app():
     app = Flask(__name__)
+
+    _moment.include_jquery(version='2.17.1', local_js='http://cdn.staticfile.org/moment.js/2.17.1/moment.min.js')
     moment = Moment(app)
+
 
     md = Markdown(app)
     md.register_extension(GitHubGistExtension)

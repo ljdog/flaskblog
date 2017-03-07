@@ -4,7 +4,8 @@
     {{ super() }}
     {%- block additional_css -%}
         <link href="{{ url_for('static', filename='css/lightbox.css') }}" rel="stylesheet" media="screen">
-        <link href="{{ url_for('static', filename='css/github-markdown.css') }}" rel="stylesheet" media="screen">
+        <link href="http://cdn.staticfile.org/github-markdown-css/2.4.1/github-markdown.min.css" rel="stylesheet" media="screen">
+{#        <link href="{{ url_for('static', filename='css/github-markdown.css') }}" rel="stylesheet" media="screen">#}
     {%- endblock -%}
 {%- endblock -%}
 {%- block body -%}
@@ -45,4 +46,5 @@
 	{%- endif -%}
 	{%- include 'sidebar.html' -%}
 {%- endblock -%}
-{%- block additional_js -%}<script src="{{ url_for('static', filename='js/lightbox-2.6.min.js') }}"></script>{%- endblock -%}
+{#{%- block additional_js -%}<script src="{{ url_for('static', filename='js/lightbox-2.6.min.js') }}"></script>{%- endblock -%}#}
+{%- block additional_js -%}<script src="http://apps.bdimg.com/libs/lightbox/2.6/lightbox.min.js"></script>{%- endblock -%}
