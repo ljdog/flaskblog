@@ -54,7 +54,7 @@ def login_required():
 def single_keyword(str_key):
     str_key = str_key.replace('  ', ' ').replace(',,', ',').split(',')
     static_str = app.settingsClass.get_config().get('BLOG_DESCRIPTION')
-    if str_key.find(static_str) == -1:
+    if static_str not in str_key:
         str_key.insert(0, static_str)
 
     str_key = ','.join(set(str_key).remove('')).replace('#',' ')
