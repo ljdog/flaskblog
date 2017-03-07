@@ -8,11 +8,10 @@ from app.share.helper_functions import make_external
 from pagination import Pagination
 from user import User
 from app.share.helper_functions import generate_csrf_token
-from app.share.helper_functions import login_required, extract_tags
+from app.share.helper_functions import login_required, extract_tags, single_keyword
 import cgi
 import mistune
 import config
-
 
 @main.route('/', defaults={'page': 1})
 @main.route('/page-<int:page>')
@@ -149,11 +148,9 @@ def new_post():
             tags_array = extract_tags(tags)
 
             post_short = request.form.get('post-short')
-            if post_keywords.find(app.settingsClass.get_config().get('BLOG_DESCRIPTION')) < 0:
-                post_keywords = app.settingsClass.get_config().get('BLOG_DESCRIPTION') + ',' + ','.join(
-                    post_keywords.split(' '))
-            else:
-                post_keywords = ','.join(post_keywords.split(' '))
+
+            post_keywords = single_keyword(post_keywords)
+
             if not post_short:
                 post_short = post_full[:200]
 
@@ -352,10 +349,12 @@ def single_post(permalink):
     preview = Markup(preview)
     if not post['data'].get('post_keywords'):
         tt = post['data'].get('title').replace('  ', ' ').replace(' ', ',')
+        tt = tt.replace('#', ' ')
         meta_keywords = current_app.config['BLOG_DESCRIPTION'] + ',' + tt
     else:
         meta_keywords = post['data'].get('post_keywords')
-        meta_keywords = meta_keywords.replace(',,', ',')
+        meta_keywords = single_keyword(meta_keywords)
+
     return render_template('single_post.html', post=post['data'], include_bd=config.INCLUDE_BD,
                            preview=preview, mk_body=mk_body, meta_keywords=meta_keywords,
                            meta_title=current_app.config['BLOG_TITLE'] + '::' + post['data']['title'])
