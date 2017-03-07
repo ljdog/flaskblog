@@ -15,9 +15,9 @@
 											<h2><a href="{{ url_for('main.single_post', permalink=post['permalink']) }}">{{ post['title'] | safe }}</a></h2>
 											<p><span class="icon-time">&nbsp;</span><i>Posted on {{ post['date']|formatdate }} by {{ post['author'] }}</i>
                                                 {% if post.get('update') %}
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="icon-refresh">&nbsp;</span><i>Update:{{ post.get('update')|formatdate }}</i>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="fa fa-refresh fa-fw">&nbsp;</span><i>Update:{{ post.get('update')|formatdate }}</i>
                                                 {% endif %}
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="icon-fire">&nbsp;{{post.get('view_count')}}</span>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="fa fa-fire fa-fw">&nbsp;{{post.get('view_count')}}</span>
                                             </p>
 										</div>
 										<div class="content no-lightbox">
@@ -27,16 +27,19 @@
 												{{ post['body']|markdown }}
 											{%- endif -%}
 										</div>
+                                        {%- if post['tags'] -%}
 										<div class="infopanel">
 											<div class="tags">
-												<li class="icon-tags" title="tags"></li>
-												{%- if post['tags'] -%}
+
+												<li class="fa fa-tag fa-fw" title="tags"></li>
+
 													{%- for tag in post['tags'] -%}
 														&nbsp;<a href="{{ url_for('main.posts_by_tag', tag=tag) }}">{{ tag }}</a>
 													{%- endfor -%}
-												{%- endif -%}
+
 											</div>
 										</div>
+                                       {%- endif -%}
 									</div>
 								</div>
 							</div>

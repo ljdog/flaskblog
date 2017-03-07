@@ -12,7 +12,7 @@ from app.share.helper_functions import login_required
 
 @mg_bp.route('/')
 def index():
-    #rst = (list(app.mediaClass.get_all()))
+    # rst = (list(app.mediaClass.get_all()))
     rst = current_app.config.get('UPLOADED_MYPIC_DEST')
     return render_template('mg/index.html', rst=rst)
 
@@ -36,7 +36,7 @@ def upload_img():
         str_folder = str(datetime.today())[:7]
         filename = form.upload.data.filename[:-4] + "_" + str(time.time())[:11]
         # print u"图片开始保存"
-
+        # 为啥这个都会报错。。。 打印个东西。。
         url_list.append(set_mypic.url(set_mypic.save(form.upload.data, folder=str_folder, name=filename)))
 
         # print u"图片已经保存"

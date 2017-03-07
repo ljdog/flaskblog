@@ -20,10 +20,10 @@ $(function(){
         var postForm = $('#post-form');
         postForm.find('#preview').val('');
     });
-    $('a.icon-edit-sign').on('click', function(){
+    $('a.fa-pencil').on('click', function(){
         return confirm('Edit?! Are you sure?');
     });
-    $('a.icon-remove-sign').on('click', function(){
+    $('a.fa-trash-o').on('click', function(){
         return confirm('remove?! Are you sure?');
     });
     $('a.icon icon-remove-sign').on('click', function(){

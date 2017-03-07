@@ -28,7 +28,7 @@
 							<tr>
 								<td><a title="Preview" href="{{ url_for('main.single_post', permalink=post['permalink']) }}" data-target="_blank">{{ post['title'] | safe }}</a></td>
 								<td>{{ post['date'] |formatdate }}</td>
-								<td><a title="Edit" href="{{ url_for('main.post_edit', id=post['id']) }}" class="icon-edit-sign bigger icon"></a>{%- if posts|length > 1 -%}&nbsp;&nbsp;<a title="Delete" href="{{ url_for('main.post_del', id=post['id']) }}" class="icon-remove-sign bigger icon"></a>{%- endif -%}</td>
+								<td><a title="Edit" href="{{ url_for('main.post_edit', id=post['id']) }}" class="fa fa-pencil fa-fw"></a>{%- if posts|length > 1 -%}&nbsp;&nbsp;<a title="Delete" href="{{ url_for('main.post_del', id=post['id']) }}" class="fa fa-trash-o fa-fw"></a>{%- endif -%}</td>
 							</tr>
 							{%- endfor -%}
 						</table>
