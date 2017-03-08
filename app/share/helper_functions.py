@@ -59,7 +59,10 @@ def single_keyword(str_key):
 
     str_key = map(lambda x: x.strip(), str_key)
     str_key = set(str_key)
-    str_key.remove('')
+
+    if '' in str_key:
+        str_key.remove('')
+
     str_key = ','.join(str_key).replace('#', ' ')
     return str_key
 
