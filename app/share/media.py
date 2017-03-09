@@ -1,5 +1,5 @@
 # coding:utf-8
-from date_utils import get_cur_time
+from app.share.date_utils import get_cur_time
 
 
 class Media:
