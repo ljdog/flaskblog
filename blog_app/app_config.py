@@ -6,19 +6,28 @@
 
 import os
 from config import ALL_SECRET_KEY
+from config import DATABASE, POSTS_COLLECTION, USERS_COLLECTION, SETTINGS_COLLECTION
+
+POSTS_COLLECTION = POSTS_COLLECTION
+USERS_COLLECTION = USERS_COLLECTION
+SETTINGS_COLLECTION = SETTINGS_COLLECTION
+
+# 保存上传的图片
+UPDATE_INFO = DATABASE.media
+
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 DEV_MODE = 'DEV'
 MODE = os.environ.get('MODE')
 
-DEBUG = MODE == DEV_MODE
+DEBUG = True #MODE == DEV_MODE
 
 SECRET_KEY = ALL_SECRET_KEY
 
 BLUEPRINTS = (
-    ('main.views', ''),
-    ('mg.views', '/mg'),
+    ('blog_app.main', ''),
+    ('blog_app.mg', '/mg'),
 )
 
 LOGGER_NAME = 'flask'

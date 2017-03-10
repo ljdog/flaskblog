@@ -1,12 +1,9 @@
 # coding:utf-8
 from flask import request, url_for, render_template, flash, redirect, session, abort, current_app
-from post import Post
-from settings import Settings
 from . import bp
-from blog_app.application import userClass, postClass,settingsClass, mediaClass
+from blog_app.share import userClass, postClass, settingsClass, mediaClass
 from blog_app.share.helper_functions import make_external
 from pagination import Pagination
-from user import User
 from blog_app.share.helper_functions import generate_csrf_token, login_required, extract_tags, single_keyword
 import cgi
 import mistune
@@ -125,10 +122,6 @@ def posts(page):
 @bp.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html', meta_title='404'), 404
-
-
-def format_datetime_filter(input_value, format_="%Y%m%d %H:%M"):
-    return input_value.strftime(format_)
 
 
 @bp.route('/newpost', methods=['GET', 'POST'])

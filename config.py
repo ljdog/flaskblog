@@ -41,7 +41,7 @@ else:
         f.write('.secret\n')
     f.close()
 
-DEBUG = False  # set it to False on production
+DEBUG = True  # set it to False on production
 
 # 百度主动推送
 INCLUDE_BD = True

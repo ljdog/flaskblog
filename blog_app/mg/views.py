@@ -6,6 +6,8 @@ from .model import UploadForm
 from blog_app.application import set_mypic
 from blog_app.application import mediaClass, userClass
 from blog_app.share.helper_functions import login_required
+from flask import Blueprint
+
 
 
 @bp.route('/')

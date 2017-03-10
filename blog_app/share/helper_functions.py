@@ -4,7 +4,8 @@ import random
 from urlparse import urljoin
 from flask import request, url_for, session, flash, redirect
 from functools import wraps
-import app
+
+
 
 def url_for_other_page(page):
     args = request.view_args.copy()
@@ -52,8 +53,9 @@ def login_required():
 
 
 def single_keyword(str_key):
+    from blog_app.application import settingsClass
     str_key = str_key.replace('  ', ' ').replace(',,', ',').split(',')
-    static_str = app.settingsClass.get_config().get('BLOG_DESCRIPTION')
+    static_str = settingsClass.get_config().get('BLOG_DESCRIPTION')
     if static_str not in str_key:
         str_key.insert(0, static_str)
 
@@ -67,5 +69,7 @@ def single_keyword(str_key):
     return str_key
 
 
+def format_datetime_filter(input_value, format_="%Y%m%d %H:%M"):
+    return input_value.strftime(format_)
 
 

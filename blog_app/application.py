@@ -3,24 +3,20 @@ from flask import Flask
 
 from flask_uploads import UploadSet, IMAGES, configure_uploads
 from flaskext.markdown import Markdown
-from blog_app.share.helper_functions import *
+from blog_app.share.helper_functions import generate_csrf_token, url_for_other_page
 from mdx_code_multiline import MultilineCodeExtension
 from mdx_github_gists import GitHubGistExtension
 from mdx_quote import QuoteExtension
 from mdx_strike import StrikeExtension
 from extensions import bootstrap, manager, set_mypic
-from blog_app.main.views import format_datetime_filter
+from blog_app.share.helper_functions import format_datetime_filter
 import os
 from importlib import import_module
-from blog_app.main.user import User
-from blog_app.main.settings import Settings
-from blog_app.main.post import Post
-from blog_app.share.media import Media
+from blog_app.share import postClass, userClass, settingsClass, mediaClass
 
-postClass = Post()
-userClass = User()
-settingsClass = Settings()
-mediaClass = Media()
+from share.log import logger
+
+
 
 
 def create_app(config=None, name=None):
@@ -40,7 +36,10 @@ def create_app(config=None, name=None):
     configure_handlers(app)
     configure_views(app)
 
+    logger.debug(u"url_map %s", app.url_map)
+    logger.debug(u"view_functions %s", app.view_functions)
     return app
+
 
 def configure_logging(app):
     import logging.config
@@ -103,5 +102,15 @@ def configure_views(app):
     """
     注册views
     """
-    for it in app.config['BLUEPRINTS']:
-        app.register_blueprint(import_module(it[0]).bp, url_prefix=it[1])
+    # BLUEPRINTS = (
+    #     ('blog_app.main', ''),
+    #     ('blog_app.mg', '/mg'),
+    # )
+    from blog_app.main import bp as main_bp
+    from blog_app.mg.views import bp
+    app.register_blueprint(main_bp)
+    app.register_blueprint(bp, url_prefix='/mg')
+    # for it in app.config['BLUEPRINTS']:
+    #     logger.debug(u"it %s", it)
+    #     app.register_blueprint(import_module(it[0]).bp, url_prefix=it[1])
+    logger.debug(u"blueprints %s", app.blueprints)
