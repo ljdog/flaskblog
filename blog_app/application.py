@@ -17,8 +17,6 @@ from blog_app.share.share_object import postClass, userClass, settingsClass, med
 from share.log import logger
 
 
-
-
 def create_app(config=None, name=None):
     if config is None:
         config = 'app_config.py'
@@ -102,15 +100,7 @@ def configure_views(app):
     """
     注册views
     """
-    # BLUEPRINTS = (
-    #     ('blog_app.main', ''),
-    #     ('blog_app.mg', '/mg'),
-    # )
-    from blog_app.main import bp as main_bp
-    from blog_app.mg.views import bp
-    app.register_blueprint(main_bp)
-    app.register_blueprint(bp, url_prefix='/mg')
-    # for it in app.config['BLUEPRINTS']:
-    #     logger.debug(u"it %s", it)
-    #     app.register_blueprint(import_module(it[0]).bp, url_prefix=it[1])
+    for it in app.config['BLUEPRINTS']:
+        logger.debug(u"it %s", it)
+        app.register_blueprint(import_module(it[0]).bp, url_prefix=it[1])
     logger.debug(u"blueprints %s", app.blueprints)

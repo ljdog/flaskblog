@@ -21,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DEV_MODE = 'DEV'
 MODE = os.environ.get('MODE')
 
-DEBUG = True #MODE == DEV_MODE
+DEBUG = MODE == DEV_MODE
 
 SECRET_KEY = ALL_SECRET_KEY
 
@@ -90,12 +90,12 @@ LOGGING = {
 
     'loggers': {
         'flask': {
-            'handlers': ['console', 'flask_rfile'],
+            'handlers': ['console', 'flask_rfile', 'flask_flylog'],
             'level': 'DEBUG',
             'propagate': False
         },
         'main': {
-            'handlers': ['console', 'main_rfile'],
+            'handlers': ['console', 'main_rfile', 'flylog'],
             'level': 'DEBUG',
             'propagate': False
         },
