@@ -12,7 +12,7 @@ from extensions import bootstrap, manager, set_mypic
 from blog_app.share.helper_functions import format_datetime_filter
 import os
 from importlib import import_module
-from blog_app.share import postClass, userClass, settingsClass, mediaClass
+from blog_app.share.share_object import postClass, userClass, settingsClass, mediaClass
 
 from share.log import logger
 

@@ -1,7 +1,7 @@
 # coding:utf-8
 from flask import request, url_for, render_template, flash, redirect, session, abort, current_app
 from . import bp
-from blog_app.share import userClass, postClass, settingsClass, mediaClass
+from blog_app.share.share_object import userClass, postClass, settingsClass, mediaClass
 from blog_app.share.helper_functions import make_external
 from pagination import Pagination
 from blog_app.share.helper_functions import generate_csrf_token, login_required, extract_tags, single_keyword
