@@ -1,4 +1,9 @@
 # coding:utf-8
+"""
+考虑到 有可能有多个app  这里放的是多个app 之间共享的部分
+比如说 secret_key  数据库连接之类的
+"""
+
 import pymongo
 import os
 
@@ -15,19 +20,19 @@ SETTINGS_COLLECTION = DATABASE.settings
 # 保存上传的图片
 UPDATE_INFO = DATABASE.media
 
-SECRET_KEY = ""
+ALL_SECRET_KEY = ""
 basedir = os.path.abspath(os.path.dirname(__file__))
 secret_file = os.path.join(basedir, '.secret')
 if os.path.exists(secret_file):
     # Read SECRET_KEY from .secret file
     f = open(secret_file, 'r')
-    SECRET_KEY = f.read().strip()
+    ALL_SECRET_KEY = f.read().strip()
     f.close()
 else:
     # Generate SECRET_KEY & save it away
-    SECRET_KEY = os.urandom(24)
+    ALL_SECRET_KEY = os.urandom(24)
     f = open(secret_file, 'w')
-    f.write(SECRET_KEY)
+    f.write(ALL_SECRET_KEY)
     f.close()
     # Modeify .gitignore to include .secret file
     gitignore_file = os.path.join(basedir, '.gitignore')
@@ -36,11 +41,10 @@ else:
         f.write('.secret\n')
     f.close()
 
-LOG_FILE = "app.log"
-
 DEBUG = False  # set it to False on production
-INCLUDE_BD = True
 
+# 百度主动推送
+INCLUDE_BD = True
 # 再从环境中导入一下看看有没有debug文件
 # --------- 重要重要重要, 永远放到最后 ----------------
 

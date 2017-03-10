@@ -2,37 +2,37 @@
 from flask import request, url_for, render_template, flash, redirect, session, abort, current_app
 from post import Post
 from settings import Settings
-from . import main
-import app
-from app.share.helper_functions import make_external
+from . import bp
+from blog_app.application import userClass, postClass,settingsClass, mediaClass
+from blog_app.share.helper_functions import make_external
 from pagination import Pagination
 from user import User
-from app.share.helper_functions import generate_csrf_token
-from app.share.helper_functions import login_required, extract_tags, single_keyword
+from blog_app.share.helper_functions import generate_csrf_token, login_required, extract_tags, single_keyword
 import cgi
 import mistune
 import config
 
-@main.route('/', defaults={'page': 1})
-@main.route('/page-<int:page>')
+
+@bp.route('/', defaults={'page': 1})
+@bp.route('/page-<int:page>')
 def index(page):
     skip = (page - 1) * int(current_app.config['PER_PAGE'])
-    posts = app.postClass.get_posts(int(current_app.config['PER_PAGE']), skip)
-    count = app.postClass.get_total_count()
+    posts = postClass.get_posts(int(current_app.config['PER_PAGE']), skip)
+    count = postClass.get_total_count()
     pag = Pagination(page, current_app.config['PER_PAGE'], count)
     include_bd = config.INCLUDE_BD
     return render_template('index.html', posts=posts['data'], pagination=pag, include_bd=include_bd,
                            meta_title=current_app.config['BLOG_TITLE'])
 
 
-@main.route('/logout')
+@bp.route('/logout')
 def logout():
-    if app.userClass.logout():
+    if userClass.logout():
         flash('You are logged out!', 'success')
     return redirect(url_for('.login'))
 
 
-@main.route('/login', methods=['GET', 'POST'])
+@bp.route('/login', methods=['GET', 'POST'])
 def login():
     error = False
     error_type = 'validate'
@@ -42,13 +42,13 @@ def login():
         if not username or not password:
             error = True
         else:
-            user_data = app.userClass.login(username.lower().strip(), password)
+            user_data = userClass.login(username.lower().strip(), password)
             if user_data['error']:
                 error = True
                 error_type = 'login'
                 flash(user_data['error'], 'error')
             else:
-                app.userClass.start_session(user_data['data'])
+                userClass.start_session(user_data['data'])
                 flash('You are logged in!', 'success')
                 return redirect(url_for('.posts'))
     else:
@@ -61,7 +61,7 @@ def login():
                            error_type=error_type)
 
 
-@main.route('/search', methods=['GET', 'POST'])
+@bp.route('/search', methods=['GET', 'POST'])
 def search():
     if request.method != 'POST':
         return redirect(url_for('.index'))
@@ -73,7 +73,7 @@ def search():
         return redirect(url_for('.index'))
 
 
-@main.before_request
+@bp.before_request
 def csrf_protect():
     if request.method == "POST":
         token = session.pop('_csrf_token', None)
@@ -81,17 +81,17 @@ def csrf_protect():
             abort(400)
 
 
-@main.before_request
+@bp.before_request
 def is_installed():
-    current_app.config = app.settingsClass.get_config()
+    current_app.config = settingsClass.get_config()
     current_app.jinja_env.globals['meta_description'] = current_app.config['BLOG_DESCRIPTION']
     if not session.get('installed', None):
         if url_for('static', filename='') not in request.path and request.path != url_for('main.install'):
-            if not app.settingsClass.is_installed():
+            if not settingsClass.is_installed():
                 return redirect(url_for('main.install'))
 
 
-@main.before_request
+@bp.before_request
 def set_globals():
     # current_app.jinja_env.globals['csrf_token'] = generate_csrf_token
     # current_app.jinja_env.globals['recent_posts'] = app.postClass.get_posts(10, 0)['data']
@@ -99,21 +99,21 @@ def set_globals():
     pass
 
 
-@main.route('/users')
+@bp.route('/users')
 @login_required()
 def users_list():
-    users = app.userClass.get_users()
+    users = userClass.get_users()
     return render_template('users.html', users=users['data'], meta_title='Users')
 
 
-@main.route('/posts_list', defaults={'page': 1})
-@main.route('/posts_list/page-<int:page>')
+@bp.route('/posts_list', defaults={'page': 1})
+@bp.route('/posts_list/page-<int:page>')
 @login_required()
 def posts(page):
     session.pop('post-preview', None)
     skip = (page - 1) * int(current_app.config['PER_PAGE'])
-    posts = app.postClass.get_posts(int(current_app.config['PER_PAGE']), skip)
-    count = app.postClass.get_total_count()
+    posts = postClass.get_posts(int(current_app.config['PER_PAGE']), skip)
+    count = postClass.get_total_count()
     pag = Pagination(page, current_app.config['PER_PAGE'], count)
 
     if not posts['data']:
@@ -122,7 +122,7 @@ def posts(page):
     return render_template('posts.html', posts=posts['data'], pagination=pag, meta_title='Posts')
 
 
-@main.errorhandler(404)
+@bp.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html', meta_title='404'), 404
 
@@ -131,7 +131,7 @@ def format_datetime_filter(input_value, format_="%Y%m%d %H:%M"):
     return input_value.strftime(format_)
 
 
-@main.route('/newpost', methods=['GET', 'POST'])
+@bp.route('/newpost', methods=['GET', 'POST'])
 @login_required()
 def new_post():
     error = False
@@ -161,7 +161,7 @@ def new_post():
                          'tags': tags_array,
                          'author': session['user']['username']}
 
-            post = app.postClass.validate_post_data(post_data)
+            post = postClass.validate_post_data(post_data)
             if request.form.get('post-preview') == '1':
                 session['post-preview'] = post
                 session[
@@ -176,7 +176,7 @@ def new_post():
                 session.pop('post-preview', None)
 
                 if request.form.get('post-id'):
-                    response = app.postClass.edit_post(
+                    response = postClass.edit_post(
                         request.form['post-id'], post)
                     if not response['error']:
                         flash('Post updated!', 'success')
@@ -187,7 +187,7 @@ def new_post():
 
                     post['view_count'] = 1
 
-                    response = app.postClass.create_new_post(post)
+                    response = postClass.create_new_post(post)
                     if response['error']:
                         error = True
                         error_type = 'post'
@@ -203,7 +203,7 @@ def new_post():
                            error_type=error_type)
 
 
-@main.route('/install', methods=['GET', 'POST'])
+@bp.route('/install', methods=['GET', 'POST'])
 def install():
     if session.get('installed', None):
         return redirect(url_for('.index'))
@@ -241,7 +241,7 @@ def install():
         if user_error or blog_error:
             error = True
         else:
-            install_result = app.settingsClass.install(blog_data, user_data)
+            install_result = settingsClass.install(blog_data, user_data)
             if install_result['error']:
                 for i in install_result['error']:
                     if i is not None:
@@ -249,16 +249,16 @@ def install():
             else:
                 session['installed'] = True
                 flash('Successfully installed!', 'success')
-                user_login = app.userClass.login(
+                user_login = userClass.login(
                     user_data['_id'], user_data['new_pass'])
                 if user_login['error']:
                     flash(user_login['error'], 'error')
                 else:
-                    app.userClass.start_session(user_login['data'])
+                    userClass.start_session(user_login['data'])
                     flash('You are logged in!', 'success')
                     return redirect(url_for('.posts'))
     else:
-        if app.settingsClass.is_installed():
+        if settingsClass.is_installed():
             return redirect(url_for('.index'))
 
     return render_template('install.html',
@@ -268,19 +268,19 @@ def install():
                            meta_title='Install')
 
 
-@main.route('/tag/<tag>', defaults={'page': 1})
-@main.route('/tag/<tag>/page-<int:page>')
+@bp.route('/tag/<tag>', defaults={'page': 1})
+@bp.route('/tag/<tag>/page-<int:page>')
 def posts_by_tag(tag, page):
     skip = (page - 1) * int(current_app.config['PER_PAGE'])
-    posts = app.postClass.get_posts(int(current_app.config['PER_PAGE']), skip, tag=tag)
-    count = app.postClass.get_total_count(tag=tag)
+    posts = postClass.get_posts(int(current_app.config['PER_PAGE']), skip, tag=tag)
+    count = postClass.get_total_count(tag=tag)
     if not posts['data']:
         abort(404)
     pag = Pagination(page, current_app.config['PER_PAGE'], count)
     return render_template('index.html', posts=posts['data'], pagination=pag, meta_title='Posts by tag: ' + tag)
 
 
-@main.route('/settings', methods=['GET', 'POST'])
+@bp.route('/settings', methods=['GET', 'POST'])
 @login_required()
 def blog_settings():
     error = None
@@ -298,7 +298,7 @@ def blog_settings():
                 error = True
                 break
         if not error:
-            update_result = app.settingsClass.update_settings(blog_data)
+            update_result = settingsClass.update_settings(blog_data)
             if update_result['error']:
                 flash(update_result['error'], 'error')
             else:
@@ -312,21 +312,21 @@ def blog_settings():
                            error_type=error_type)
 
 
-@main.route('/manage_trifles')
+@bp.route('/manage_trifles')
 @login_required()
 def manage_trifles():
     return render_template('manage_trifles.html')
 
 
-@main.route('/post/<permalink>')
+@bp.route('/post/<permalink>')
 def single_post(permalink):
     from flask import Markup
-    post = app.postClass.get_post_by_permalink(permalink)
+    post = postClass.get_post_by_permalink(permalink)
 
     if not post['data']:
         abort(404)
     # 更新一下 访问量
-    app.postClass.update_view_count(permalink)
+    postClass.update_view_count(permalink)
     markdown = mistune.Markdown(escape=True, hard_wrap=True)
     b = post.get('data').get('body')
     p = post.get('data').get('preview')
@@ -360,22 +360,22 @@ def single_post(permalink):
                            meta_title=current_app.config['BLOG_TITLE'] + '::' + post['data']['title'])
 
 
-@main.route('/q/<query>', defaults={'page': 1})
-@main.route('/q/<query>/page-<int:page>')
+@bp.route('/q/<query>', defaults={'page': 1})
+@bp.route('/q/<query>/page-<int:page>')
 def search_results(page, query):
     skip = (page - 1) * int(current_app.config['PER_PAGE'])
     if query:
-        posts = app.postClass.get_posts(
+        posts = postClass.get_posts(
             int(current_app.config['PER_PAGE']), skip, search=query)
     else:
         posts = []
         posts['data'] = []
-    count = app.postClass.get_total_count(search=query)
+    count = postClass.get_total_count(search=query)
     pag = Pagination(page, current_app.config['PER_PAGE'], count)
     return render_template('index.html', posts=posts['data'], pagination=pag, meta_title='Search results')
 
 
-@main.route('/post_preview')
+@bp.route('/post_preview')
 @login_required()
 def post_preview():
     post = session.get('post-preview')
@@ -384,10 +384,10 @@ def post_preview():
     return render_template('preview.html', post=post, meta_title='Preview post::' + post['title'])
 
 
-@main.route('/post_edit?id=<id>')
+@bp.route('/post_edit?id=<id>')
 @login_required()
 def post_edit(id):
-    post = app.postClass.get_post_by_id(id)
+    post = postClass.get_post_by_id(id)
     if post['error']:
         flash(post['error'], 'error')
         return redirect(url_for('.posts'))
@@ -397,17 +397,17 @@ def post_edit(id):
     return render_template('edit_post.html',
                            meta_title='Edit post::' + post['data']['title'],
                            post=post['data'],
-                           post_keywords=post['data'].get('post_keywords') or app.settingsClass.get_config().get(
+                           post_keywords=post['data'].get('post_keywords') or settingsClass.get_config().get(
                                'BLOG_DESCRIPTION'),
                            error=False,
                            error_type=False)
 
 
-@main.route('/post_delete?id=<id>')
+@bp.route('/post_delete?id=<id>')
 @login_required()
 def post_del(id):
-    if app.postClass.get_total_count() > 1:
-        response = app.postClass.delete_post(id)
+    if postClass.get_total_count() > 1:
+        response = postClass.delete_post(id)
         if response['data'] is True:
             flash('Post removed!', 'success')
         else:
@@ -418,12 +418,12 @@ def post_del(id):
     return redirect(url_for('.posts'))
 
 
-@main.route('/recent_feed')
+@bp.route('/recent_feed')
 def recent_feed():
     return
-    feed = AtomFeed(app.config['BLOG_TITLE'] + '::Recent Articles',
+    feed = AtomFeed(config['BLOG_TITLE'] + '::Recent Articles',
                     feed_url=request.url, url=request.url_root)
-    posts = postClass.get_posts(int(app.config['PER_PAGE']), 0)
+    posts = postClass.get_posts(int(config['PER_PAGE']), 0)
     for post in posts['data']:
         post_entry = post['preview'] if post['preview'] else post['body']
         feed.add(post['title'], md(post_entry),
