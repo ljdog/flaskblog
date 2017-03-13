@@ -26,7 +26,7 @@ DEBUG = MODE == DEV_MODE
 SECRET_KEY = ALL_SECRET_KEY
 
 BLUEPRINTS = (
-    ('blog_app.main', ''),
+    ('blog_app.main.views', ''),
     ('blog_app.mg', '/mg'),
 )
 
