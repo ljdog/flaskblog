@@ -1,7 +1,7 @@
-#coding:utf-8
+# coding:utf-8
 from flask_script import Manager
+from blog_app.application import create_app
 
-from app import create_app
 app = create_app()
 
 manager = Manager(app)
