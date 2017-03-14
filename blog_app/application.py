@@ -13,8 +13,7 @@ from blog_app.share.helper_functions import format_datetime_filter
 import os
 from importlib import import_module
 from blog_app.share.share_object import postClass, userClass, settingsClass, mediaClass
-
-from share.log import logger
+from share.log import logger,flask_log
 
 
 def create_app(config=None, name=None):
@@ -33,9 +32,6 @@ def create_app(config=None, name=None):
     configure_context_processors(app)
     configure_handlers(app)
     configure_views(app)
-
-    logger.debug(u"url_map %s", app.url_map)
-    logger.debug(u"view_functions %s", app.view_functions)
     return app
 
 
@@ -101,6 +97,4 @@ def configure_views(app):
     注册views
     """
     for it in app.config['BLUEPRINTS']:
-        logger.debug(u"it %s", it)
         app.register_blueprint(import_module(it[0]).bp, url_prefix=it[1])
-    logger.debug(u"blueprints %s", app.blueprints)

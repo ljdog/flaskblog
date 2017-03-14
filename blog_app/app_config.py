@@ -58,12 +58,14 @@ LOGGING = {
             'class': 'flylog.LogHandler',
             'formatter': 'standard',
             'source': os.path.basename(BASE_DIR),
+            'role_list': ['default', 'py'],
         },
         'flylog': {
             'level': 'CRITICAL',
             'class': 'flylog.LogHandler',
             'formatter': 'standard',
             'source': os.path.basename(BASE_DIR),
+            'role_list': ['default', 'py'],
         },
         'flask_rfile': {
             'level': 'ERROR',
@@ -110,6 +112,5 @@ LOGGING = {
 # flask-babel
 BABEL_DEFAULT_LOCALE = 'zh_CN'
 BABEL_DEFAULT_TIMEZONE = 'Asia/Shanghai'
-
 # admin_user
 # SESSION_KEY_ADMIN_USERNAME = 'admin_username'
