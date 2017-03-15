@@ -4,7 +4,7 @@ import datetime
 
 from bson.objectid import ObjectId
 
-from app.share.helper_functions import *
+from blog_app.share.helper_functions import *
 
 
 class Post:

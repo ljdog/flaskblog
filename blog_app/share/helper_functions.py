@@ -6,7 +6,6 @@ from flask import request, url_for, session, flash, redirect
 from functools import wraps
 
 
-
 def url_for_other_page(page):
     args = request.view_args.copy()
     args['page'] = page
