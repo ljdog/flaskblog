@@ -8,6 +8,7 @@ import cgi
 import mistune
 import config
 from flask import Blueprint
+import json
 
 bp = Blueprint('main', __name__)
 
@@ -389,12 +390,16 @@ def post_edit(id):
 
     if session.get('post-preview') and session['post-preview']['action'] == 'add':
         session.pop('post-preview', None)
+    tags_list = list(set(postClass.get_all_tags()))
+    tags_list = json.dumps(tags_list, ensure_ascii=False)
+
     return render_template('edit_post.html',
                            meta_title='Edit post::' + post['data']['title'],
                            post=post['data'],
                            post_keywords=post['data'].get('post_keywords') or settingsClass.get_config().get(
                                'BLOG_DESCRIPTION'),
                            error=False,
+                           tags_list=tags_list,
                            error_type=False)
 
 

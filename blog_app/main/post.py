@@ -123,6 +123,15 @@ class Post:
 
         return self.response
 
+    def get_all_tags(self):
+        rst = self.collection.find({}, {'_id': 0, 'tags': 1})
+        rst_list = []
+        for info in rst:
+            if info.get('tags'):
+                rst_list += info.get('tags')
+
+        return rst_list
+
     def create_new_post(self, post_data):
         self.response['error'] = None
         try:
