@@ -14,9 +14,12 @@ from blog_app.share.log import logger, flask_log
 def index():
     # rst = (list(app.mediaClass.get_all()))
     # logger.error(u"ttt")
-    xx = 1/0
+    #xx = 1/0
     # flask_log.fatal(u"ttt")
-    rst = current_app.config.get('UPLOADED_MYPIC_DEST')
+    from blog_app.share.share_object import *
+    logger.error(postClass.get_all_tags())
+    # rst = current_app.config.get('UPLOADED_MYPIC_DEST')
+    rst = postClass.get_all_tags()
     return render_template('mg/index.html', rst=rst)
 
 
