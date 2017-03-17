@@ -13,9 +13,9 @@ from blog_app.share.log import logger, flask_log
 @bp.route('/')
 def index():
     # rst = (list(app.mediaClass.get_all()))
-    logger.error(u"ttt")
+    # logger.error(u"ttt")
     xx = 1/0
-    flask_log.fatal(u"ttt")
+    # flask_log.fatal(u"ttt")
     rst = current_app.config.get('UPLOADED_MYPIC_DEST')
     return render_template('mg/index.html', rst=rst)
 
