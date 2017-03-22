@@ -9,6 +9,7 @@ import mistune
 import config
 from flask import Blueprint
 import json
+from blog_app.share.log import logger
 
 bp = Blueprint('main', __name__)
 
