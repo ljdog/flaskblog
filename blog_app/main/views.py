@@ -2,6 +2,7 @@
 from flask import request, url_for, render_template, flash, redirect, session, abort, current_app
 from blog_app.share.share_object import userClass, postClass, settingsClass, mediaClass
 from blog_app.share.helper_functions import make_external
+from blog_app.share.date_utils import get_cur_time
 from pagination import Pagination
 from blog_app.share.helper_functions import generate_csrf_token, login_required, extract_tags, single_keyword
 import cgi
@@ -40,6 +41,7 @@ def login():
     if request.method == 'POST':
         username = request.form.get('login-username')
         password = request.form.get('login-password')
+        logger.error(u"login blog IP %s time %s", request.remote_addr, get_cur_time())
         if not username or not password:
             error = True
         else:
