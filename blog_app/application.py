@@ -27,7 +27,9 @@ def create_app(config=None, name=None):
 
     app.config.from_pyfile(config)
 
+    # 遗漏了这个...
     configure_logging(app)
+
     configure_extensions(app)
     configure_context_processors(app)
     configure_handlers(app)

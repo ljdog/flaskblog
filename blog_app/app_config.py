@@ -110,7 +110,7 @@ LOGGING = {
 # SQLALCHEMY_ECHO = False
 
 # flask-babel
-BABEL_DEFAULT_LOCALE = 'zh_CN'
-BABEL_DEFAULT_TIMEZONE = 'Asia/Shanghai'
+# BABEL_DEFAULT_LOCALE = 'zh_CN'
+# BABEL_DEFAULT_TIMEZONE = 'Asia/Shanghai'
 # admin_user
 # SESSION_KEY_ADMIN_USERNAME = 'admin_username'
