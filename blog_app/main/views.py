@@ -41,7 +41,7 @@ def login():
     if request.method == 'POST':
         username = request.form.get('login-username')
         password = request.form.get('login-password')
-        logger.error(u"login blog IP %s time %s", request.remote_addr, get_cur_time())
+        logger.critical(u"login blog IP %s time %s", request.remote_addr, get_cur_time())
         if not username or not password:
             error = True
         else:
@@ -320,6 +320,7 @@ def manage_trifles():
 @bp.route('/post/<permalink>')
 def single_post(permalink):
     from flask import Markup
+    import datetime
     post = postClass.get_post_by_permalink(permalink)
 
     if not post['data']:
@@ -329,15 +330,6 @@ def single_post(permalink):
     markdown = mistune.Markdown(escape=True, hard_wrap=True)
     b = post.get('data').get('body')
     p = post.get('data').get('preview')
-
-    current_app.logger.warn(u"type %s" % (type(b)))
-    current_app.logger.warn(u"数据库中的内容")
-    current_app.logger.warn(b)
-    current_app.logger.warn(u"数据库中的内容")
-    current_app.logger.warn(p)
-    current_app.logger.warn(post['data'].get('post_keywords'))
-
-    current_app.logger.warn(u"markdown############")
 
     mk_body = markdown(b)
     preview = markdown(p)
@@ -353,6 +345,9 @@ def single_post(permalink):
     else:
         meta_keywords = post['data'].get('post_keywords')
         meta_keywords = single_keyword(meta_keywords)
+
+    # 好麻烦这里还得转过时区来
+    post['data']['date'] = post['data']['date'] + datetime.timedelta(hours=8)
 
     return render_template('single_post.html', post=post['data'], include_bd=config.INCLUDE_BD,
                            preview=preview, mk_body=mk_body, meta_keywords=meta_keywords, permalink=permalink,
