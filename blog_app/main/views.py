@@ -54,7 +54,7 @@ def login():
                 userClass.start_session(user_data['data'])
                 flash('You are logged in!', 'success')
                 return redirect(url_for('.posts'))
-    elsef:
+    else:
         if session.get('user'):
             return redirect(url_for('.posts'))
 
